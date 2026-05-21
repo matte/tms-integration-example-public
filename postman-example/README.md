@@ -93,11 +93,14 @@ Look up shipment tracking information using different identifiers:
 | **GET Track by Pro Number** | Query parameter: `proNumber` |
 | **GET Track by Bill Number** | Query parameter: `billNumber` |
 
-### Carriers
+### Organizational Information
+
+Endpoints used to retrieve organizational details
 
 | Request | Description |
 |---|---|
 | **GET Carriers** | Returns the list of available carriers for your account. |
+| **GET Organizations** | Returns the list of available organizations for your account. |
 
 ## Environments
 
