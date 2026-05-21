@@ -74,6 +74,10 @@ Demonstrates common CRUD operations on shipments:
 | **DELETE Shipment** | Deletes a shipment by its `shipmentId`. |
 | **POST minimal shipment** | Creates a shipment with only the minimum required fields. |
 
+### Shipment > Shipment Utilities > Shipment Search
+
+Demonstrates searching for shipments
+
 ### Quick Quote
 
 Allows you to get rate quotes without creating a shipment:
