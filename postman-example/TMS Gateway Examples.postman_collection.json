@@ -1343,6 +1343,56 @@
           "description": "This collection provides examples of sending a completed shipment to eShipping. The carrier can be provided in the \"carrierScac\" property or by sending the \"bookLowestCostCarrier\" property set to true, eShipping will book the shipment with the lowest cost carrier."
         },
         {
+          "name": "Multi-Stop Shipment",
+          "item": [
+            {
+              "name": "POST Multi-Stop Shipment - Incomplete/Proposed",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentShipmentId',responseJson.shipmentId);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"shipmentStatus\": \"BUILDING\",\r\n    \"isComplete\": false,\r\n    \"dispatch\": false,\r\n    \"mode\": \"FTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2026-5-30\",\r\n    \"requestedDeliveryDate\": \"2026-5-30\",\r\n    \"stops\": [\r\n        {\r\n            \"sequenceNumber\": 1,\r\n            \"specialInstructions\": \"TEST PLEASE DELETE Pickup Num O-1000453-40-10255, Test\",\r\n            \"sendEmail\": true,\r\n            \"locationDirectionType\": \"MY_LOCATION\",\r\n            \"name\": \"Kentucky Fulfillment Center\",\r\n            \"address1\": \"1001 Glengarry\",\r\n            \"address2\": \"STE A\",\r\n            \"city\": \"Fairdale\",\r\n            \"stateCode\": \"KY\",\r\n            \"postalCode\": \"40118\",\r\n            \"countryCode\": \"US\",\r\n            \"openTime\": \"11:00\",\r\n            \"closeTime\": \"16:00\",\r\n            \"latestScheduledDate\": \"2026-5-30\",\r\n            \"latestScheduledTime\": \"16:00\",\r\n            \"earliestScheduledDate\": \"2026-5-30\",\r\n            \"earliestScheduledTime\": \"4:00\",\r\n            \"contactName\": \"Test Contact\",\r\n            \"contactPhone\": \"8004734144\",\r\n            \"contactFax\": null,\r\n            \"contactEmails\": [\r\n                \"customerservice@containers.com\"\r\n            ],\r\n            \"accessorials\": [\r\n                {\r\n                    \"accessorialCode\": \"LIFTGATE\",\r\n                    \"accessorialType\": \"ORIGIN\"\r\n                }\r\n            ],\r\n            \"referenceNumbers\": [\r\n                {\r\n                    \"type\": \"PO_NUMBER\",\r\n                    \"value\": \"PO02002945\"\r\n                },\r\n                {\r\n                    \"type\": \"SO_NUMBER\",\r\n                    \"value\": \"SO02002945\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"sequenceNumber\": 2,\r\n            \"specialInstructions\": \"TEST\",\r\n            \"sendEmail\": true,\r\n            \"locationDirectionType\": \"THIRD_PARTY\",\r\n            \"name\": \"Test  Address\",\r\n            \"address1\": \"339 Raum\",\r\n            \"address2\": null,\r\n            \"city\": \"Lawson\",\r\n            \"stateCode\": \"MO\",\r\n            \"postalCode\": \"64062\",\r\n            \"countryCode\": \"US\",\r\n            \"openTime\": \"12:02\",\r\n            \"closeTime\": \"17:00\",\r\n            \"latestScheduledDate\": \"2026-5-30\",\r\n            \"latestScheduledTime\": \"16:00\",\r\n            \"earliestScheduledDate\": \"2026-5-30\",\r\n            \"earliestScheduledTime\": \"4:00\",\r\n            \"contactName\": \"Test Contact\",\r\n            \"contactPhone\": \"4505392772\",\r\n            \"contactFax\": null,\r\n            \"contactEmails\": [\r\n                \"sylvieroy@testing.com\"\r\n            ],\r\n            \"referenceNumbers\": [\r\n                {\r\n                    \"type\": \"PO_NUMBER\",\r\n                    \"value\": \"PO02002996\"\r\n                },\r\n                {\r\n                    \"type\": \"SO_NUMBER\",\r\n                    \"value\": \"SO02002996\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"sequenceNumber\": 3,\r\n            \"specialInstructions\": \"TEST\",\r\n            \"sendEmail\": true,\r\n            \"locationDirectionType\": \"THIRD_PARTY\",\r\n            \"name\": \"Test Address 2\",\r\n            \"address1\": \"365 Main\",\r\n            \"address2\": null,\r\n            \"city\": \"Trenton\",\r\n            \"stateCode\": \"MO\",\r\n            \"postalCode\": \"64683\",\r\n            \"countryCode\": \"US\",\r\n            \"openTime\": \"12:02\",\r\n            \"closeTime\": \"17:00\",\r\n            \"latestScheduledDate\": \"2026-5-30\",\r\n            \"latestScheduledTime\": \"16:00\",\r\n            \"earliestScheduledDate\": \"2026-5-30\",\r\n            \"earliestScheduledTime\": \"4:00\",\r\n            \"contactName\": \"Test Contact\",\r\n            \"contactPhone\": \"6603585555\",\r\n            \"contactFax\": null,\r\n            \"contactEmails\": [\r\n                \"sylvieroy@testing.com\"\r\n            ],\r\n            \"accessorials\": [\r\n                {\r\n                    \"accessorialCode\": \"LIFTGATE\",\r\n                    \"accessorialType\": \"DESTINATION\"\r\n                }\r\n            ],\r\n            \"referenceNumbers\": [\r\n                {\r\n                    \"type\": \"PO_NUMBER\",\r\n                    \"value\": \"PO02002922\"\r\n                },\r\n                {\r\n                    \"type\": \"SO_NUMBER\",\r\n                    \"value\": \"SO02002922\"\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"hazmat\": null,\r\n    \"billingDetail\": {\r\n        \"billingType\": \"BILLING_STANDARD\",\r\n        \"billingPartyType\": \"SHIPPER\",\r\n        \"billingParty\": \"Container & Packaging Supply % eShipping, LLC\",\r\n        \"billingAddress1\": \"PO Box 14126\",\r\n        \"billingAddress2\": null,\r\n        \"billingCity\": \"Parkville\",\r\n        \"billingStateCode\": \"MO\",\r\n        \"billingPostalCode\": \"64152\",\r\n        \"billingCountryCode\": \"US\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_175\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1823.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ],\r\n    \"accessorials\": [],\r\n    \"referenceNumbers\": [\r\n        {\r\n            \"type\": \"SHIPMENT_ID\",\r\n            \"value\": \"SID02002922\"\r\n        }\r\n    ]\r\n}"
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Demonstrates teh creation of a multi stop shipment. Multi stop is only allowed for FTL shipments and quoting is not supported via the API. Mutli stop shipments can only be loaded via API as building status shipments."
+        },
+        {
           "name": "Shipment Utilities",
           "item": [
             {

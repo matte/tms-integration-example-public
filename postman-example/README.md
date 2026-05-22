@@ -62,6 +62,21 @@ Demonstrates sending a fully complete shipment that gets booked immediately:
 | 2 | **POST Shipment — Complete using lowest cost carrier** | Same as above, but instead of specifying a carrier, sets `bookLowestCostCarrier: true` to have eShipping automatically select the cheapest option. |
 | 3 | **View BOL** | Opens the Bill of Lading document link returned from the booked shipment. |
 
+### Shipment > Multi-Stop Shipment
+
+Demonstrates sending a multi-stop shipment
+
+| # | Request | Description |
+|---|---|---|
+| 1 | **POST Multi-Stop Shipment - Incomplete/Proposed** | Creates a shipment in `BUILDING` with multiple stops.  |
+
+Notes on Multi-stop:
+* FTL mode only
+* Building status only
+* does not use origin and destination, uses a stops array
+* Quoting and booking are not supported via API
+
+
 ### Shipment > Shipment Utilities
 
 Demonstrates common CRUD operations on shipments:
