@@ -78,6 +78,14 @@ Demonstrates common CRUD operations on shipments:
 
 Demonstrates searching for shipments
 
+### Shipment > Shipment Utilities > Reference Numbers
+
+| Request | Description |
+|---|---|
+| **POST Add a Reference Number to a shipment** | Adds a reference number to a shipment. |
+| **DELETE Delete a Reference Number From a shipment** | Deletes a reference number from a shipment. |
+
+
 ### Quick Quote
 
 Allows you to get rate quotes without creating a shipment:

@@ -1496,6 +1496,89 @@
               "description": "The Shipments endpoint allows for parametorized searching for shipments.\n\nParameteres accepted:  \nname  \nbillnumber  \nproNumber  \norganizationId  \nshipmentStatus  \ncreatedStart"
             },
             {
+              "name": "Reference Numbers",
+              "item": [
+                {
+                  "name": "Add a Reference Number to a shipment",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const responseJson = pm.response.json();\r",
+                          "console.log(responseJson.shipmentId)\r",
+                          "pm.collectionVariables.set('currentReferenceNumberID',responseJson.id);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"type\": \"PO_NUMBER\",\r\n    \"value\": \"TEST_NEW_PO_2922ABCDE\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/referenceNumbers",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments",
+                        "{{currentShipmentId}}",
+                        "referenceNumbers"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete a Reference Number from a shipment Copy",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"type\": \"PO_NUMBER\",\r\n    \"value\": \"TEST_NEW_PO_2922ABCDE\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/referenceNumbers/{{currentReferenceNumberID}}",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments",
+                        "{{currentShipmentId}}",
+                        "referenceNumbers",
+                        "{{currentReferenceNumberID}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
               "name": "POST a shipment to work with in this collection",
               "event": [
                 {
@@ -2783,6 +2866,7 @@
       "listen": "prerequest",
       "script": {
         "type": "text/javascript",
+        "requests": {},
         "exec": [
           ""
         ]
@@ -2792,6 +2876,7 @@
       "listen": "test",
       "script": {
         "type": "text/javascript",
+        "requests": {},
         "exec": [
           ""
         ]
@@ -2877,6 +2962,10 @@
     },
     {
       "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "currentReferenceNumberID",
       "value": ""
     }
   ]
