@@ -1965,6 +1965,21 @@
             },
             {
               "name": "GET Shipment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentDocumentLink',responseJson.documents.bol);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [],
@@ -2899,6 +2914,47 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "GET documents for a shipment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/Documents",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "shipments",
+                "{{currentShipmentId}}",
+                "Documents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get a Shipment Document",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{currentDocumentLink}}",
+              "host": [
+                "{{currentDocumentLink}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "auth": {
@@ -3016,7 +3072,11 @@
     },
     {
       "key": "currentReferenceNumberID",
-      "value": ""
+      "value": "Populated by Add ReferenceNumber.tests and used for Delete ReferenceNumber"
+    },
+    {
+      "key": "currentDocumentLink",
+      "value": "Populated by PostShipment.tests and GetDocuments.test and used for Get a shipment document call"
     }
   ]
 }

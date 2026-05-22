@@ -129,6 +129,17 @@ Endpoints used to retrieve organizational details
 | **GET Carriers** | Returns the list of available carriers for your account. |
 | **GET Organizations** | Returns the list of available organizations for your account. |
 
+
+### Documents
+
+Endpoints used for retrieving documents
+
+| Request | Description |
+|---|---|
+| **GET documents for a shipment** | Returns the list of documents for a shipment. |
+| **GET a Shipments Document** | Example of using the link provided for a document to retrieve the document. |
+
+
 ## Environments
 
 The collection uses the `subdomainSuffix` variable to target different environments:
