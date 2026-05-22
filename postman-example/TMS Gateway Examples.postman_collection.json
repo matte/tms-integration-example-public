@@ -2866,6 +2866,28 @@
               "body": "{\n    \"shipments\": [\n        {\n            \"id\": \"b4e5257d-ad28-4c87-697f-08dc6f681089\",\n            \"name\": \"1200140323\",\n            \"billNumber\": \"1200140323\",\n            \"proNumber\": \"771872916\",\n            \"trackingEvents\": [\n                {\n                    \"carrierName\": \"UPS Ground Freight\",\n                    \"trackingStatus\": \"DELIVERED\",\n                    \"statusDescription\": \"SHIPMENT HAS BEEN DELIVERED TO THE CONSIGNEE.\",\n                    \"dateTime\": \"2024-05-07T12:33:00\",\n                    \"city\": \"Carteret\",\n                    \"stateProvince\": \"NJ\",\n                    \"country\": null,\n                    \"postalCode\": null,\n                    \"latitude\": 40.5783,\n                    \"longitude\": -74.2207\n                }\n            ]\n        }\n    ]\n}"
             }
           ]
+        },
+        {
+          "name": "GET Track by eShipping Shipment ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/trackings",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "shipments",
+                "{{currentShipmentId}}",
+                "trackings"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },

@@ -119,6 +119,7 @@ Look up shipment tracking information using different identifiers:
 | **GET Track by ShipmentId** | Query parameter: `shipmentId` |
 | **GET Track by Pro Number** | Query parameter: `proNumber` |
 | **GET Track by Bill Number** | Query parameter: `billNumber` |
+| **GET Track by eShipping Shipment ID** | Returns the tracking details for a shipment using the eShipping ShipmentID |
 
 ### Organizational Information
 
