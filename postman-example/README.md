@@ -17,6 +17,7 @@ Before running any requests, open the collection's **Variables** tab and fill in
 | `loginEmail` | Your TMS login email address. |
 | `loginPassword` | Your TMS login password. |
 | `clientId` | Your OAuth client identifier (provided by eShipping). |
+| `redirectUri` | The OAuth redirect URI configured for your client application. This must match the redirect URI registered for your TMS/eShipping OAuth client. |
 | `AccountNumber` | Your TMS account number. |
 | `OrganizationId` | Your organization GUID (provided by eShipping). |
 | `subdomainSuffix` | Environment suffix. Use `-staging` for staging or leave blank for production. |
@@ -137,7 +138,7 @@ Endpoints used for retrieving documents
 
 | Request | Description |
 |---|---|
-| **GET documents for a shipment** | Returns the list of documents for a shipment. |
+| **GET documents for a shipment** | Returns the list of documents for a shipment. (NOTE: currently BOL and Pallet Label do not return from this call, but can be retrieved by calling GET Shipment |
 | **GET a Shipments Document** | Example of using the link provided for a document to retrieve the document. |
 
 

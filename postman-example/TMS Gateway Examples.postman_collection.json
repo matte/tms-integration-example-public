@@ -93,7 +93,8 @@
                       "pm.collectionVariables.set('codeChallenge', codeChallenge);"
                     ],
                     "type": "text/javascript",
-                    "packages": {}
+                    "packages": {},
+                    "requests": {}
                   }
                 },
                 {
@@ -104,7 +105,7 @@
                       "const queryString = authorizeRedirect.split('?')[1];\r",
                       "const urlParams = queryString.split('&');\r",
                       "\r",
-                      "for (i = 0; i < urlParams.length; i++) {\r",
+                      "for (let i = 0; i < urlParams.length; i++)  {\r",
                       "    let pair = urlParams[i].split('=');\r",
                       "    if (pair[0] === 'code') {\r",
                       "        pm.collectionVariables.set('code', pair[1]);\r",
@@ -112,7 +113,8 @@
                       "}"
                     ],
                     "type": "text/javascript",
-                    "packages": {}
+                    "packages": {},
+                    "requests": {}
                   }
                 }
               ],
@@ -198,10 +200,11 @@
                   "script": {
                     "exec": [
                       "const responseJson = pm.response.json();\r",
-                      "console.log(responseJson.access_token)\r",
                       "pm.collectionVariables.set('currentToken',responseJson.access_token);"
                     ],
-                    "type": "text/javascript"
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
                   }
                 }
               ],
@@ -377,7 +380,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"selectedReasonType\": \"CUSTOMER_SPECIFIED\",\r\n  \"selectedReasonDescription\": \"Preffered Carrier\",\r\n  \"selectedRateId\": \"{{currentRateId}}\",\r\n  \"dispatch\": true\r\n}"
+                  "raw": "{\r\n  \"selectedReasonType\": \"CUSTOMER_SPECIFIED\",\r\n  \"selectedReasonDescription\": \"Prefered Carrier\",\r\n  \"selectedRateId\": \"{{currentRateId}}\",\r\n  \"dispatch\": true\r\n}"
                 },
                 "url": {
                   "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/bookingOptions",
@@ -397,7 +400,7 @@
               "response": []
             }
           ],
-          "description": "The calls in this folder provide and example of sending eShipping a shipment , then geting rate quotes and finalizing the shipment.\n\nIf the desired process is to send eShipping incomplete shipments and then rateshop and finalize teh shipments via the TMS, all that is needed is the first request (POST Shipment - Incomplete/Proposed)."
+          "description": "StartFragmentThe calls in this folder provide an example of sending eShipping a shipment, then getting rate quotes and finalizing the shipment.\\\\n\\\\nIf the desired process is to send eShipping incomplete shipments and then rate shop and finalize the shipments via the TMS, all that is needed is the first request (POST Shipment - Incomplete/Proposed)EndFragment  \n  \n."
         },
         {
           "name": "Booking a complete shipment",
@@ -422,14 +425,6 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  {
-                    "key": "Tms-Organization-Id",
-                    "value": "98686B39-27D0-48F8-A4D9-30EBB2073E1E"
-                  },
-                  {
-                    "key": "Tms-Tenant-Id",
-                    "value": "EA2C9870-B7BA-4905-4964-08D4C7AD2F4A"
-                  },
                   {
                     "key": "Content-Type",
                     "value": "application/json"
@@ -475,21 +470,13 @@
                 "method": "POST",
                 "header": [
                   {
-                    "key": "Tms-Organization-Id",
-                    "value": "{{OrganizationId}}"
-                  },
-                  {
-                    "key": "Tms-Tenant-Id",
-                    "value": "{{TenantId}}"
-                  },
-                  {
                     "key": "Content-Type",
                     "value": "application/json"
                   }
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"carrierScac\": \"FXNL\",\r\n    \"shipmentStatus\": \"BOOKED\",\r\n    \"isComplete\": true,\r\n    \"dispatch\": true,\r\n    \"mode\": \"LTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2023-01-15\",\r\n    \"requestedDeliveryDate\": \"2023-01-21\",\r\n    \"origin\": {\r\n        \"specialInstructions\": \"TEST PLEASE DELETE Pickup Num O-1000453-40-10255, Test\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"MY_LOCATION\",\r\n        \"name\": \"ACME Inc.\",\r\n        \"address1\": \"1001 Warner Dr\",\r\n        \"address2\": \"STE A\",\r\n        \"city\": \"Fairdale\",\r\n        \"stateCode\": \"KY\",\r\n        \"postalCode\": \"40118\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"11:00\",\r\n        \"closeTime\": \"16:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"8005554144\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"customerservice@fake.com\"\r\n        ]\r\n    },\r\n    \"destination\": {\r\n       \"specialInstructions\": \"TEST\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"THIRD_PARTY\",\r\n        \"name\": \"Tesing Company\",\r\n        \"address1\": \"339 Raum\",\r\n        \"address2\": null,\r\n        \"city\": \"Lawson\",\r\n        \"stateCode\": \"MO\",\r\n        \"postalCode\": \"64062\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"12:02\",\r\n        \"closeTime\": \"17:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"4505552772\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"willie@testing.com\"\r\n        ]\r\n    },\r\n    \"hazmat\": null,\r\n    \"billingDetail\": {\r\n        \"billingType\": \"BILLING_STANDARD\",\r\n        \"billingPartyType\": \"SHIPPER\",\r\n        \"billingParty\": \"ACME Inc % eShipping, LLC\",\r\n        \"billingAddress1\": \"PO Box 14126\",\r\n        \"billingAddress2\": null,\r\n        \"billingCity\": \"Parkville\",\r\n        \"billingStateCode\": \"MO\",\r\n        \"billingPostalCode\": \"64152\",\r\n        \"billingCountryCode\": \"US\",\r\n        \"direction\": \"OTHER\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_175\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1823.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ],\r\n    \"accessorials\": [\r\n        {\r\n            \"accessorialCode\": \"LIFTGATE\",\r\n            \"accessorialType\": \"ORIGIN\"\r\n        }\r\n    ],\r\n    \"referenceNumbers\": [\r\n\t\t{\r\n\t\t\t\"type\" : \"SHIPMENT_ID\",\r\n\t\t\t\"value\": \"SIDR02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"PO_NUMBER\",\r\n\t\t\t\"value\": \"PDRO02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"SO_NUMBER\",\r\n\t\t\t\"value\": \"SDR02002922\"\r\n\t\t}\r\n\t]\r\n}"
+                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"carrierScac\": \"\",\r\n    \"bookLowestCostCarrier\": true,\r\n    \"shipmentStatus\": \"BOOKED\",\r\n    \"isComplete\": true,\r\n    \"dispatch\": true,\r\n    \"mode\": \"LTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2023-01-15\",\r\n    \"requestedDeliveryDate\": \"2023-01-21\",\r\n    \"origin\": {\r\n        \"specialInstructions\": \"TEST PLEASE DELETE Pickup Num O-1000453-40-10255, Test\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"MY_LOCATION\",\r\n        \"name\": \"ACME Inc.\",\r\n        \"address1\": \"1001 Warner Dr\",\r\n        \"address2\": \"STE A\",\r\n        \"city\": \"Fairdale\",\r\n        \"stateCode\": \"KY\",\r\n        \"postalCode\": \"40118\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"11:00\",\r\n        \"closeTime\": \"16:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"8005554144\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"customerservice@fake.com\"\r\n        ]\r\n    },\r\n    \"destination\": {\r\n       \"specialInstructions\": \"TEST\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"THIRD_PARTY\",\r\n        \"name\": \"Tesing Company\",\r\n        \"address1\": \"339 Raum\",\r\n        \"address2\": null,\r\n        \"city\": \"Lawson\",\r\n        \"stateCode\": \"MO\",\r\n        \"postalCode\": \"64062\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"12:02\",\r\n        \"closeTime\": \"17:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"4505552772\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"willie@testing.com\"\r\n        ]\r\n    },\r\n    \"hazmat\": null,\r\n    \"billingDetail\": {\r\n        \"billingType\": \"BILLING_STANDARD\",\r\n        \"billingPartyType\": \"SHIPPER\",\r\n        \"billingParty\": \"ACME Inc % eShipping, LLC\",\r\n        \"billingAddress1\": \"PO Box 14126\",\r\n        \"billingAddress2\": null,\r\n        \"billingCity\": \"Parkville\",\r\n        \"billingStateCode\": \"MO\",\r\n        \"billingPostalCode\": \"64152\",\r\n        \"billingCountryCode\": \"US\",\r\n        \"direction\": \"OTHER\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_175\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1823.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ],\r\n    \"accessorials\": [\r\n        {\r\n            \"accessorialCode\": \"LIFTGATE\",\r\n            \"accessorialType\": \"ORIGIN\"\r\n        }\r\n    ],\r\n    \"referenceNumbers\": [\r\n\t\t{\r\n\t\t\t\"type\" : \"SHIPMENT_ID\",\r\n\t\t\t\"value\": \"SIDR02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"PO_NUMBER\",\r\n\t\t\t\"value\": \"PDRO02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"SO_NUMBER\",\r\n\t\t\t\"value\": \"SDR02002922\"\r\n\t\t}\r\n\t]\r\n}"
                 },
                 "url": {
                   "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
@@ -515,9 +502,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{current_BOL_link}}",
+                  "raw": "{{currentDocumentLink}}",
                   "host": [
-                    "{{current_BOL_link}}"
+                    "{{currentDocumentLink}}"
                   ]
                 }
               },
@@ -574,7 +561,7 @@
               "response": []
             }
           ],
-          "description": "Demonstrates teh creation of a multi stop shipment. Multi stop is only allowed for FTL shipments and quoting is not supported via the API. Mutli stop shipments can only be loaded via API as building status shipments."
+          "description": "Demonstrates the creation of a multi-stop shipment. Multi-stop is only allowed for FTL shipments, and quoting is not supported via the API. Multi-stop shipments can only be loaded via the API as building status shipments."
         },
         {
           "name": "Shipment Utilities",
@@ -727,7 +714,7 @@
                   "response": []
                 }
               ],
-              "description": "The Shipments endpoint allows for parametorized searching for shipments.\n\nParameteres accepted:  \nname  \nbillnumber  \nproNumber  \norganizationId  \nshipmentStatus  \ncreatedStart"
+              "description": "The Shipments endpoint allows for parameterized searching for shipments  \n\nParameteres accepted:  \nname  \nbillnumber  \nproNumber  \norganizationId  \nshipmentStatus  \ncreatedStart"
             },
             {
               "name": "Reference Numbers",
@@ -779,7 +766,7 @@
                   "response": []
                 },
                 {
-                  "name": "Delete a Reference Number from a shipment Copy",
+                  "name": "Delete a Reference Number from a shipment",
                   "request": {
                     "method": "DELETE",
                     "header": [],
@@ -1130,7 +1117,7 @@
                 "organizations"
               ]
             },
-            "description": "Retrieves a list of the Organizations accessable by the loggedin user."
+            "description": "Retrieves a list of the Organizations accessible by the loggedin user."
           },
           "response": []
         },
