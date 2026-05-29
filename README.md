@@ -27,7 +27,7 @@ TmsIntegrationExample.sln
 │   │   ├── Program.cs                       # Application entry point
 │   │   ├── Startup.cs                       # DI and service configuration
 │   │   ├── TmsIntegrationExampleJob.cs      # BackgroundService that triggers processing
-│   │   ├── TmsIntegrationExampleProcessor.cs# Reads mock data, transforms, and posts shipments
+│   │   ├── TmsIntegrationExampleProcessor.cs # Reads mock data, transforms, and posts shipments
 │   │   ├── Transformers/
 │   │   │   ├── MockOrderToShipment.cs       # Order → ShipmentPost transformer
 │   │   │   └── MockAddressToGatewayStop.cs  # Address → Stop transformer
