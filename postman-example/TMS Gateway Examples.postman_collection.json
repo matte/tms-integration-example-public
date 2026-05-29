@@ -384,7 +384,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"selectedReasonType\": \"CUSTOMER_SPECIFIED\",\r\n  \"selectedReasonDescription\": \"Prefered Carrier\",\r\n  \"selectedRateId\": \"{{currentRateId}}\",\r\n  \"dispatch\": true\r\n}"
+                  "raw": "{\r\n  \"selectedReasonType\": \"CUSTOMER_SPECIFIED\",\r\n  \"selectedReasonDescription\": \"Preferred Carrier\",\r\n  \"selectedRateId\": \"{{currentRateId}}\",\r\n  \"dispatch\": true\r\n}"
                 },
                 "url": {
                   "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/bookingOptions",
@@ -623,7 +623,7 @@
                         }
                       ]
                     },
-                    "description": "Search shipments by a given pro number."
+                    "description": "Search shipments by a given bill number."
                   },
                   "response": []
                 },
@@ -633,7 +633,7 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?organizationId=06bc7cea-de1e-4c89-0acc-08d771edee7c&shipmentStatus=BUILDING",
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?organizationId={{OrganizationId}}&shipmentStatus=BUILDING",
                       "protocol": "https",
                       "host": [
                         "tmsgateway{{subdomainSuffix}}",
@@ -646,7 +646,7 @@
                       "query": [
                         {
                           "key": "organizationId",
-                          "value": "06bc7cea-de1e-4c89-0acc-08d771edee7c"
+                          "value": "{{OrganizationId}}"
                         },
                         {
                           "key": "shipmentStatus",
@@ -654,7 +654,7 @@
                         }
                       ]
                     },
-                    "description": "Search shipments by a given pro number."
+                    "description": "Search shipments for an organization filtered by status."
                   },
                   "response": []
                 },
@@ -664,7 +664,7 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?organizationId=06bc7cea-de1e-4c89-0acc-08d771edee7c&createdStart=02%3A00",
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?organizationId={{OrganizationId}}&createdStart=02:00",
                       "protocol": "https",
                       "host": [
                         "tmsgateway{{subdomainSuffix}}",
@@ -677,15 +677,15 @@
                       "query": [
                         {
                           "key": "organizationId",
-                          "value": "06bc7cea-de1e-4c89-0acc-08d771edee7c"
+                          "value": "{{OrganizationId}}"
                         },
                         {
                           "key": "createdStart",
-                          "value": "02%3A00"
+                          "value": "02:00"
                         }
                       ]
                     },
-                    "description": "Search shipments by a given pro number."
+                    "description": "Search shipments by Organization and date"
                   },
                   "response": []
                 },
@@ -713,12 +713,12 @@
                         }
                       ]
                     },
-                    "description": "Search shipments by a given pro number."
+                    "description": "Search shipments by a given a reference number."
                   },
                   "response": []
                 }
               ],
-              "description": "The Shipments endpoint allows for parameterized searching for shipments  \n\nParameteres accepted:  \nname  \nbillnumber  \nproNumber  \norganizationId  \nshipmentStatus  \ncreatedStart"
+              "description": "The Shipments endpoint allows for parameterized searching for shipments\n\nParameters accepted:  \nname  \nbillnumber  \nproNumber  \norganizationId  \nshipmentStatus  \ncreatedStart"
             },
             {
               "name": "Reference Numbers",

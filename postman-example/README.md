@@ -22,7 +22,7 @@ Before running any requests, open the collection's **Variables** tab and fill in
 | `OrganizationId` | Your organization GUID (provided by eShipping). |
 | `subdomainSuffix` | Environment suffix. Use `-staging` for staging or leave blank for production. |
 
-The remaining variables (`currentToken`, `state`, `codeVerifier`, `codeChallenge`, `code`, `currentShipmentId`, `currentRateId`, `current_BOL_link`, etc.) are **auto-populated** by the collection's scripts as you run requests. You do not need to set them manually.
+The remaining variables (`currentToken`, `state`, `codeVerifier`, `codeChallenge`, `code`, `currentShipmentId`, `currentRateId`, `currentDocumentLink`, etc.) are **auto-populated** by the collection's scripts as you run requests. You do not need to set them manually.
 
 ## Authentication
 
