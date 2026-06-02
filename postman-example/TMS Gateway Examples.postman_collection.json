@@ -1,0 +1,1314 @@
+{
+  "info": {
+    "_postman_id": "cd04515d-ba7b-4fdc-a381-437c094065b3",
+    "name": "TMS Gateway Examples",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32807236"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Standard PKCE",
+          "item": [
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableCookies": false
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"{{loginEmail}}\",\r\n    \"password\": \"{{loginPassword}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://login.tms{{subdomainSuffix}}.engagedtechnologies.com/api/account/login",
+                  "protocol": "https",
+                  "host": [
+                    "login",
+                    "tms{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "api",
+                    "account",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Authorize",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "function base64UrlEncode(bytes) {\r",
+                      "    return btoa(String.fromCharCode(...bytes))\r",
+                      "        .replace(/\\+/g, '-')\r",
+                      "        .replace(/\\//g, '_')\r",
+                      "        .replace(/=+$/, '');\r",
+                      "}\r",
+                      "\r",
+                      "function randomBase64UrlString(byteLength) {\r",
+                      "    const bytes = new Uint8Array(byteLength);\r",
+                      "    crypto.getRandomValues(bytes);\r",
+                      "    return base64UrlEncode(bytes);\r",
+                      "}\r",
+                      "\r",
+                      "async function sha256Base64Url(value) {\r",
+                      "    const encoded = new TextEncoder().encode(value);\r",
+                      "    const hashBuffer = await crypto.subtle.digest('SHA-256', encoded);\r",
+                      "    return base64UrlEncode(new Uint8Array(hashBuffer));\r",
+                      "}\r",
+                      "\r",
+                      "const state = randomBase64UrlString(96);\r",
+                      "const codeVerifier = randomBase64UrlString(96);\r",
+                      "const codeChallenge = await sha256Base64Url(codeVerifier);\r",
+                      "\r",
+                      "pm.collectionVariables.set('state', state);\r",
+                      "pm.collectionVariables.set('codeVerifier', codeVerifier);\r",
+                      "pm.collectionVariables.set('codeChallenge', codeChallenge);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const authorizeRedirect = pm.response.headers.get('location');\r",
+                      "const queryString = authorizeRedirect.split('?')[1];\r",
+                      "const urlParams = queryString.split('&');\r",
+                      "\r",
+                      "for (let i = 0; i < urlParams.length; i++)  {\r",
+                      "    let pair = urlParams[i].split('=');\r",
+                      "    if (pair[0] === 'code') {\r",
+                      "        pm.collectionVariables.set('code', pair[1]);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "followRedirects": false,
+                "disableCookies": false
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "response_type",
+                      "value": "code",
+                      "description": "Do not change.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "{{clientId}}",
+                      "description": "Set in global variables. Must match a corresponding client id in the identity provider client configuration.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "{{redirectUri}}",
+                      "description": "Set in global variables. Must match a valid redirect uri in the identity provider client configuration.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "openid profile {{scope}}",
+                      "description": "Set additional scopes in global variables. Separate scopes with a space.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "state",
+                      "value": "{{state}}",
+                      "description": "Handled in this requests Pre-request Script.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "code_challenge",
+                      "value": "{{codeChallenge}}",
+                      "description": "Handled in this requests Pre-request Script.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "code_challenge_method",
+                      "value": "S256",
+                      "description": "Do not change.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://login.tms{{subdomainSuffix}}.engagedtechnologies.com/connect/authorize",
+                  "protocol": "https",
+                  "host": [
+                    "login",
+                    "tms{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "connect",
+                    "authorize"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "pm.collectionVariables.set('currentToken',responseJson.access_token);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "grant_type",
+                      "value": "authorization_code",
+                      "description": "Do not change.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "code",
+                      "value": "{{code}}",
+                      "description": "Handled in the Authorize Pre-request Script.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "{{redirectUri}}",
+                      "description": "Handled in the Tests.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "code_verifier",
+                      "value": "{{codeVerifier}}",
+                      "description": "Handled in the Authorize Pre-request Script.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "",
+                      "description": "Do not change.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "{{clientId}}",
+                      "description": "Set in global variables. Must match a corresponding client id in the identity provider client configuration.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://login.tms{{subdomainSuffix}}.engagedtechnologies.com/connect/token",
+                  "protocol": "https",
+                  "host": [
+                    "login",
+                    "tms{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "connect",
+                    "token"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "The three endpoints contained in this folder are required to authenticate and receive a bearer token to be used when making calls to the API.  \n  \nThis authentication process utilizes OAuth 2 with PKCE."
+        }
+      ]
+    },
+    {
+      "name": "Shipment",
+      "item": [
+        {
+          "name": "Starting with an incomplete shipment",
+          "item": [
+            {
+              "name": "POST Shipment - Incomplete/Proposed",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentShipmentId',responseJson.shipmentId);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"shipmentStatus\": \"BUILDING\",\r\n    \"isComplete\": false,\r\n    \"dispatch\": false,\r\n    \"mode\": \"LTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2022-12-15\",\r\n    \"requestedDeliveryDate\": \"2022-12-21\",\r\n    \"origin\": {\r\n        \"specialInstructions\": \"TEST PLEASE DELETE Pickup Num O-1000453-40-10255, Test\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"MY_LOCATION\",\r\n        \"name\": \"ACME Inc.\",\r\n        \"address1\": \"1001 Warner Dr\",\r\n        \"address2\": \"STE A\",\r\n        \"city\": \"Fairdale\",\r\n        \"stateCode\": \"KY\",\r\n        \"postalCode\": \"40118\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"11:00\",\r\n        \"closeTime\": \"16:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"8005554144\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"customerservice@fake.com\"\r\n        ]\r\n    },\r\n    \"destination\": {\r\n        \"specialInstructions\": \"TEST\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"THIRD_PARTY\",\r\n        \"name\": \"Tesing Company\",\r\n        \"address1\": \"339 Raum\",\r\n        \"address2\": null,\r\n        \"city\": \"Lawson\",\r\n        \"stateCode\": \"MO\",\r\n        \"postalCode\": \"64062\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"12:02\",\r\n        \"closeTime\": \"17:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"4505552772\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"willie@testing.com\"\r\n        ]\r\n    },\r\n    \"hazmat\": null,\r\n    \"billingDetail\": {\r\n        \"billingType\": \"BILLING_STANDARD\",\r\n        \"billingPartyType\": \"SHIPPER\",\r\n        \"billingParty\": \"ACME Inc % eShipping, LLC\",\r\n        \"billingAddress1\": \"PO Box 14126\",\r\n        \"billingAddress2\": null,\r\n        \"billingCity\": \"Parkville\",\r\n        \"billingStateCode\": \"MO\",\r\n        \"billingPostalCode\": \"64152\",\r\n        \"billingCountryCode\": \"US\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_175\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1823.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ],\r\n    \"accessorials\": [\r\n        {\r\n            \"accessorialCode\": \"LIFTGATE\",\r\n            \"accessorialType\": \"ORIGIN\"\r\n        },\r\n        {\r\n            \"accessorialCode\": \"LIFTGATE\",\r\n            \"accessorialType\": \"DESTINATION\"\r\n        }\r\n    ],\r\n    \"referenceNumbers\": [\r\n\t\t{\r\n\t\t\t\"type\" : \"SHIPMENT_ID\",\r\n\t\t\t\"value\": \"SID02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"PO_NUMBER\",\r\n\t\t\t\"value\": \"PO02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"SO_NUMBER\",\r\n\t\t\t\"value\": \"SO02002922\"\r\n\t\t}\r\n\t]\r\n}"
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Quote a Shipment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.rates[0].id)\r",
+                      "pm.collectionVariables.set('currentRateId',responseJson.rates[0].id);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/quotes",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments",
+                    "{{currentShipmentId}}",
+                    "quotes"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Shipment Booking Options finalize",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"selectedReasonType\": \"CUSTOMER_SPECIFIED\",\r\n  \"selectedReasonDescription\": \"Preferred Carrier\",\r\n  \"selectedRateId\": \"{{currentRateId}}\",\r\n  \"dispatch\": true\r\n}"
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/bookingOptions",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments",
+                    "{{currentShipmentId}}",
+                    "bookingOptions"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "The calls in this folder provide an example of sending eShipping a shipment, then getting rate quotes and finalizing the shipment.\\\\n\\\\nIf the desired process is to send eShipping incomplete shipments and then rate shop and finalize the shipments via the TMS, all that is needed is the first request (POST Shipment - Incomplete/Proposed)\n\n."
+        },
+        {
+          "name": "Booking a complete shipment",
+          "item": [
+            {
+              "name": "POST Shipment - Complete providing carrier",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentShipmentId',responseJson.shipmentId);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"carrierScac\": \"FXNL\",\r\n    \"shipmentStatus\": \"BOOKED\",\r\n    \"isComplete\": true,\r\n    \"dispatch\": true,\r\n    \"mode\": \"LTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2023-01-15\",\r\n    \"requestedDeliveryDate\": \"2023-01-21\",\r\n    \"origin\": {\r\n        \"specialInstructions\": \"TEST PLEASE DELETE Pickup Num O-1000453-40-10255, Test\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"MY_LOCATION\",\r\n        \"name\": \"ACME Inc.\",\r\n        \"address1\": \"1001 Warner Dr\",\r\n        \"address2\": \"STE A\",\r\n        \"city\": \"Fairdale\",\r\n        \"stateCode\": \"KY\",\r\n        \"postalCode\": \"40118\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"11:00\",\r\n        \"closeTime\": \"16:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"8005554144\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"customerservice@fake.com\"\r\n        ]\r\n    },\r\n    \"destination\": {\r\n        \"specialInstructions\": \"TEST\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"THIRD_PARTY\",\r\n        \"name\": \"Tesing Company\",\r\n        \"address1\": \"339 Raum\",\r\n        \"address2\": null,\r\n        \"city\": \"Lawson\",\r\n        \"stateCode\": \"MO\",\r\n        \"postalCode\": \"64062\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"12:02\",\r\n        \"closeTime\": \"17:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"4505552772\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"willie@testing.com\"\r\n        ]\r\n    },\r\n    \"hazmat\": null,\r\n    \"billingDetail\": {\r\n        \"billingType\": \"BILLING_STANDARD\",\r\n        \"billingPartyType\": \"SHIPPER\",\r\n        \"billingParty\": \"ACME Inc % eShipping, LLC\",\r\n        \"billingAddress1\": \"PO Box 14126\",\r\n        \"billingAddress2\": null,\r\n        \"billingCity\": \"Parkville\",\r\n        \"billingStateCode\": \"MO\",\r\n        \"billingPostalCode\": \"64152\",\r\n        \"billingCountryCode\": \"US\",\r\n        \"direction\": \"OTHER\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_175\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1823.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ],\r\n    \"accessorials\": [\r\n        {\r\n            \"accessorialCode\": \"LIFTGATE\",\r\n            \"accessorialType\": \"ORIGIN\"\r\n        }\r\n    ],\r\n    \"referenceNumbers\": [\r\n\t\t{\r\n\t\t\t\"type\" : \"SHIPMENT_ID\",\r\n\t\t\t\"value\": \"SIDR02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"PO_NUMBER\",\r\n\t\t\t\"value\": \"PDRO02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"SO_NUMBER\",\r\n\t\t\t\"value\": \"SDR02002922\"\r\n\t\t}\r\n\t]\r\n}"
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Shipment - Complete using lowest cost carrier",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentShipmentId',responseJson.shipmentId);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"carrierScac\": \"\",\r\n    \"bookLowestCostCarrier\": true,\r\n    \"shipmentStatus\": \"BOOKED\",\r\n    \"isComplete\": true,\r\n    \"dispatch\": true,\r\n    \"mode\": \"LTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2023-01-15\",\r\n    \"requestedDeliveryDate\": \"2023-01-21\",\r\n    \"origin\": {\r\n        \"specialInstructions\": \"TEST PLEASE DELETE Pickup Num O-1000453-40-10255, Test\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"MY_LOCATION\",\r\n        \"name\": \"ACME Inc.\",\r\n        \"address1\": \"1001 Warner Dr\",\r\n        \"address2\": \"STE A\",\r\n        \"city\": \"Fairdale\",\r\n        \"stateCode\": \"KY\",\r\n        \"postalCode\": \"40118\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"11:00\",\r\n        \"closeTime\": \"16:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"8005554144\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"customerservice@fake.com\"\r\n        ]\r\n    },\r\n    \"destination\": {\r\n       \"specialInstructions\": \"TEST\",\r\n        \"sendEmail\": true,\r\n        \"locationDirectionType\": \"THIRD_PARTY\",\r\n        \"name\": \"Tesing Company\",\r\n        \"address1\": \"339 Raum\",\r\n        \"address2\": null,\r\n        \"city\": \"Lawson\",\r\n        \"stateCode\": \"MO\",\r\n        \"postalCode\": \"64062\",\r\n        \"countryCode\": \"US\",\r\n        \"openTime\": \"12:02\",\r\n        \"closeTime\": \"17:00\",\r\n        \"contactName\": \"Test Contact\",\r\n        \"contactPhone\": \"4505552772\",\r\n        \"contactFax\": null,\r\n        \"contactEmails\": [\r\n            \"willie@testing.com\"\r\n        ]\r\n    },\r\n    \"hazmat\": null,\r\n    \"billingDetail\": {\r\n        \"billingType\": \"BILLING_STANDARD\",\r\n        \"billingPartyType\": \"SHIPPER\",\r\n        \"billingParty\": \"ACME Inc % eShipping, LLC\",\r\n        \"billingAddress1\": \"PO Box 14126\",\r\n        \"billingAddress2\": null,\r\n        \"billingCity\": \"Parkville\",\r\n        \"billingStateCode\": \"MO\",\r\n        \"billingPostalCode\": \"64152\",\r\n        \"billingCountryCode\": \"US\",\r\n        \"direction\": \"OTHER\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_175\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1823.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ],\r\n    \"accessorials\": [\r\n        {\r\n            \"accessorialCode\": \"LIFTGATE\",\r\n            \"accessorialType\": \"ORIGIN\"\r\n        }\r\n    ],\r\n    \"referenceNumbers\": [\r\n\t\t{\r\n\t\t\t\"type\" : \"SHIPMENT_ID\",\r\n\t\t\t\"value\": \"SIDR02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"PO_NUMBER\",\r\n\t\t\t\"value\": \"PDRO02002922\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"type\" : \"SO_NUMBER\",\r\n\t\t\t\"value\": \"SDR02002922\"\r\n\t\t}\r\n\t]\r\n}"
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View BOL",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{currentDocumentLink}}",
+                  "host": [
+                    "{{currentDocumentLink}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "This collection provides examples of sending a completed shipment to eShipping. The carrier can be provided in the \"carrierScac\" property or by sending the \"bookLowestCostCarrier\" property set to true, eShipping will book the shipment with the lowest cost carrier."
+        },
+        {
+          "name": "Multi-Stop Shipment",
+          "item": [
+            {
+              "name": "POST Multi-Stop Shipment - Incomplete/Proposed",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentShipmentId',responseJson.shipmentId);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"shipmentStatus\": \"BUILDING\",\r\n    \"isComplete\": false,\r\n    \"dispatch\": false,\r\n    \"mode\": \"FTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2026-5-30\",\r\n    \"requestedDeliveryDate\": \"2026-5-30\",\r\n    \"stops\": [\r\n        {\r\n            \"sequenceNumber\": 1,\r\n            \"specialInstructions\": \"TEST PLEASE DELETE Pickup Num O-1000453-40-10255, Test\",\r\n            \"sendEmail\": true,\r\n            \"locationDirectionType\": \"MY_LOCATION\",\r\n            \"name\": \"ACME Inc.\",\r\n            \"address1\": \"1001 Warner Dr\",\r\n            \"address2\": \"STE A\",\r\n            \"city\": \"Fairdale\",\r\n            \"stateCode\": \"KY\",\r\n            \"postalCode\": \"40118\",\r\n            \"countryCode\": \"US\",\r\n            \"openTime\": \"11:00\",\r\n            \"closeTime\": \"16:00\",\r\n            \"contactName\": \"Test Contact\",\r\n            \"contactPhone\": \"8005554144\",\r\n            \"contactFax\": null,\r\n            \"contactEmails\": [\r\n                \"customerservice@fake.com\"\r\n            ],\r\n            \"accessorials\": [\r\n                {\r\n                    \"accessorialCode\": \"LIFTGATE\",\r\n                    \"accessorialType\": \"ORIGIN\"\r\n                }\r\n            ],\r\n            \"referenceNumbers\": [\r\n                {\r\n                    \"type\": \"PO_NUMBER\",\r\n                    \"value\": \"PO02002945\"\r\n                },\r\n                {\r\n                    \"type\": \"SO_NUMBER\",\r\n                    \"value\": \"SO02002945\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"sequenceNumber\": 2,\r\n            \"specialInstructions\": \"TEST\",\r\n            \"sendEmail\": true,\r\n            \"locationDirectionType\": \"THIRD_PARTY\",\r\n            \"name\": \"First Stop\",\r\n            \"address1\": \"2344 Main\",\r\n            \"address2\": null,\r\n            \"city\": \"Trenton\",\r\n            \"stateCode\": \"MO\",\r\n            \"postalCode\": \"64683\",\r\n            \"countryCode\": \"US\",\r\n            \"openTime\": \"12:02\",\r\n            \"closeTime\": \"17:00\",\r\n            \"latestScheduledDate\": \"2026-5-30\",\r\n            \"latestScheduledTime\": \"16:00\",\r\n            \"earliestScheduledDate\": \"2026-5-30\",\r\n            \"earliestScheduledTime\": \"4:00\",\r\n            \"contactName\": \"Test Contact\",\r\n            \"contactPhone\": \"5555392772\",\r\n            \"contactFax\": null,\r\n            \"contactEmails\": [\r\n                \"bob@testing.com\"\r\n            ],\r\n            \"referenceNumbers\": [\r\n                {\r\n                    \"type\": \"PO_NUMBER\",\r\n                    \"value\": \"PO02002996\"\r\n                },\r\n                {\r\n                    \"type\": \"SO_NUMBER\",\r\n                    \"value\": \"SO02002996\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"sequenceNumber\": 3,\r\n            \"specialInstructions\": \"TEST\",\r\n            \"sendEmail\": true,\r\n            \"locationDirectionType\": \"THIRD_PARTY\",\r\n            \"name\": \"Tesing Company\",\r\n            \"address1\": \"339 Raum\",\r\n            \"address2\": null,\r\n            \"city\": \"Lawson\",\r\n            \"stateCode\": \"MO\",\r\n            \"postalCode\": \"64062\",\r\n            \"countryCode\": \"US\",\r\n            \"openTime\": \"12:02\",\r\n            \"closeTime\": \"17:00\",\r\n            \"contactName\": \"Test Contact\",\r\n            \"contactPhone\": \"4505552772\",\r\n            \"contactFax\": null,\r\n            \"contactEmails\": [\r\n                \"willie@testing.com\"\r\n            ],\r\n            \"accessorials\": [\r\n                {\r\n                    \"accessorialCode\": \"LIFTGATE\",\r\n                    \"accessorialType\": \"DESTINATION\"\r\n                }\r\n            ],\r\n            \"referenceNumbers\": [\r\n                {\r\n                    \"type\": \"PO_NUMBER\",\r\n                    \"value\": \"PO02002922\"\r\n                },\r\n                {\r\n                    \"type\": \"SO_NUMBER\",\r\n                    \"value\": \"SO02002922\"\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"hazmat\": null,\r\n    \"billingDetail\": {\r\n        \"billingType\": \"BILLING_STANDARD\",\r\n        \"billingPartyType\": \"SHIPPER\",\r\n        \"billingParty\": \"ACME inc % eShipping, LLC\",\r\n        \"billingAddress1\": \"PO Box 14126\",\r\n        \"billingAddress2\": null,\r\n        \"billingCity\": \"Parkville\",\r\n        \"billingStateCode\": \"MO\",\r\n        \"billingPostalCode\": \"64152\",\r\n        \"billingCountryCode\": \"US\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_175\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1823.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ],\r\n    \"accessorials\": [],\r\n    \"referenceNumbers\": [\r\n        {\r\n            \"type\": \"SHIPMENT_ID\",\r\n            \"value\": \"SID02002922\"\r\n        }\r\n    ]\r\n}"
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "Demonstrates the creation of a multi-stop shipment. Multi-stop is only allowed for FTL shipments, and quoting is not supported via the API. Multi-stop shipments can only be loaded via the API as building status shipments."
+        },
+        {
+          "name": "Shipment Utilities",
+          "item": [
+            {
+              "name": "Shipment Search",
+              "item": [
+                {
+                  "name": "GET Shipments by Pro number",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?proNumber=123456",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments"
+                      ],
+                      "query": [
+                        {
+                          "key": "proNumber",
+                          "value": "123456"
+                        }
+                      ]
+                    },
+                    "description": "Search shipments by a given pro number."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET Shipments by BOL number",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?billNumber=123456",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments"
+                      ],
+                      "query": [
+                        {
+                          "key": "billNumber",
+                          "value": "123456"
+                        }
+                      ]
+                    },
+                    "description": "Search shipments by a given bill number."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET Shipments in building status for an organization",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?organizationId={{OrganizationId}}&shipmentStatus=BUILDING",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments"
+                      ],
+                      "query": [
+                        {
+                          "key": "organizationId",
+                          "value": "{{OrganizationId}}"
+                        },
+                        {
+                          "key": "shipmentStatus",
+                          "value": "BUILDING"
+                        }
+                      ]
+                    },
+                    "description": "Search shipments for an organization filtered by status."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET Shipments for an organization that were created today",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments?organizationId={{OrganizationId}}&createdStart=02:00",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments"
+                      ],
+                      "query": [
+                        {
+                          "key": "organizationId",
+                          "value": "{{OrganizationId}}"
+                        },
+                        {
+                          "key": "createdStart",
+                          "value": "02:00"
+                        }
+                      ]
+                    },
+                    "description": "Search shipments by Organization and date"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "GET Shipments by any reference number",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/search?q=1100566735",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments",
+                        "search"
+                      ],
+                      "query": [
+                        {
+                          "key": "q",
+                          "value": "1100566735"
+                        }
+                      ]
+                    },
+                    "description": "Search shipments by a given a reference number."
+                  },
+                  "response": []
+                }
+              ],
+              "description": "The Shipments endpoint allows for parameterized searching for shipments\n\nParameters accepted:  \nname  \nbillnumber  \nproNumber  \norganizationId  \nshipmentStatus  \ncreatedStart"
+            },
+            {
+              "name": "Reference Numbers",
+              "item": [
+                {
+                  "name": "Add a Reference Number to a shipment",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "const responseJson = pm.response.json();\r",
+                          "console.log(responseJson.shipmentId)\r",
+                          "pm.collectionVariables.set('currentReferenceNumberID',responseJson.id);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"type\": \"PO_NUMBER\",\r\n    \"value\": \"TEST_NEW_PO_2922ABCDE\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/referenceNumbers",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments",
+                        "{{currentShipmentId}}",
+                        "referenceNumbers"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete a Reference Number from a shipment",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/referenceNumbers/{{currentReferenceNumberID}}",
+                      "protocol": "https",
+                      "host": [
+                        "tmsgateway{{subdomainSuffix}}",
+                        "engagedtechnologies",
+                        "com"
+                      ],
+                      "path": [
+                        "shipments",
+                        "{{currentShipmentId}}",
+                        "referenceNumbers",
+                        "{{currentReferenceNumberID}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Update a shipment",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"id\": \"{{currentShipmentId}}\",\r\n    \"shipmentStatus\": \"BUILDING\",\r\n    \"isComplete\": false,\r\n    \"dispatch\": false,\r\n    \"mode\": \"LTL\",\r\n    \"equipmentType\": \"LTL_DRY_VAN\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2022-12-15\",\r\n    \"requestedDeliveryDate\": \"2022-12-21\",\r\n    \"hazmat\": {\r\n        \"contactName\": \"Jimmy Smith\",\r\n        \"contactPhone\": \"555-444-6666\",\r\n        \"contractNumber\": \"987654321\"\r\n    },\r\n    \"units\": [\r\n        {\r\n            \"freightClass\": \"FREIGHT_CLASS_55\",\r\n            \"description\": \"Plastic Packaging\",\r\n            \"quantity\": 3,\r\n            \"weight\": 1359.00,\r\n            \"packageType\": \"PALLETS\",\r\n            \"palletType\": null,\r\n            \"isStackable\": true,\r\n            \"hazmat\": null,\r\n            \"monetaryValue\": 2500.00,\r\n            \"nmfc\": \"156600-4\",\r\n            \"sku\": \"SK8827272\",\r\n            \"isNew\": true,\r\n            \"containsQuantity\": 1,\r\n            \"containsDescription\": \"Cases\",\r\n            \"height\": 15.00,\r\n            \"width\": 40.00,\r\n            \"length\": 48.00\r\n        }\r\n    ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Shipment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentDocumentLink',responseJson.documents.bol);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments",
+                    "{{currentShipmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE Shipment",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments",
+                    "{{currentShipmentId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST minimal shipment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const responseJson = pm.response.json();\r",
+                      "console.log(responseJson.shipmentId)\r",
+                      "pm.collectionVariables.set('currentShipmentId',responseJson.shipmentId);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"accountNumber\": \"{{AccountNumber}}\",\r\n    \"shipmentStatus\": \"BUILDING\",\r\n    \"isComplete\": false,\r\n    \"dispatch\": false,\r\n    \"mode\": \"LTL\",\r\n    \"serviceLevel\": \"STANDARD\",\r\n    \"requestedPickupDate\": \"2022-12-15\",\r\n    \r\n    \"referenceNumbers\": [\r\n\t\t{\r\n\t\t\t\"type\" : \"SHIPMENT_ID\",\r\n\t\t\t\"value\": \"SID02002922\"\r\n\t\t}\r\n\t]\r\n}"
+                },
+                "url": {
+                  "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments",
+                  "protocol": "https",
+                  "host": [
+                    "tmsgateway{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "shipments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "description": "This collection demonstrates using PUT to update a shipment, how to GET and existing shipment and how to Delete a shipment."
+        }
+      ]
+    },
+    {
+      "name": "Quick Quote",
+      "item": [
+        {
+          "name": "POST Quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"originPostalCode\": \"60606\",\r\n  \"destinationPostalCode\": \"30303\",\r\n  \"totalWeight\": 1000,\r\n  \"freightClass\": \"FREIGHT_CLASS_50\",\r\n  \"originAccessorials\": [\r\n  ],\r\n  \"destinationAccessorials\": [\r\n  ],\r\n  \"productAccessorials\": [\r\n  ],\r\n  \"shipmentAccessorials\": [\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/quotes",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "quotes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Quote V2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-version",
+                "value": "2"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"originPostalCode\": \"64152\",\r\n  \"destinationPostalCode\": \"64110\",\r\n  \"units\": [\r\n    {\r\n        \"totalWeight\": 1000,\r\n        \"freightClass\": \"FREIGHT_CLASS_50\",\r\n        \"quantity\":1,\r\n        \"height\": 15.00,\r\n        \"width\": 40.00,\r\n        \"length\": 48.00,\r\n        \"isHazmat\":false\r\n    }\r\n  ],\r\n  \r\n  \"originAccessorials\": [\r\n  ],\r\n  \"destinationAccessorials\": [\r\n  ],\r\n  \"productAccessorials\": [\r\n  ],\r\n  \"shipmentAccessorials\": [\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/quotes",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "quotes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "The Quick Quote endpoints can be used to determine rates without setting up a shipment.  \nVersion 1 of quick quote rates are based on weight and zip codes.  \nVersion 2 of quick quote rates utilize the dimensions to provide more accurate rates.  \n  \nWe recommend using Version 2"
+    },
+    {
+      "name": "Tracking",
+      "item": [
+        {
+          "name": "Track by ShipmentId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/trackings?shipmentId=SIDR02002922",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "trackings"
+              ],
+              "query": [
+                {
+                  "key": "shipmentId",
+                  "value": "SIDR02002922"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Track by Pro Number",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/trackings?proNumber=771872916",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "trackings"
+              ],
+              "query": [
+                {
+                  "key": "proNumber",
+                  "value": "771872916"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Track by Bill Number",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/trackings?billNumber=1200140323",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "trackings"
+              ],
+              "query": [
+                {
+                  "key": "billNumber",
+                  "value": "1200140323"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Track by eShipping Shipment ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/trackings",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "shipments",
+                "{{currentShipmentId}}",
+                "trackings"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Organizational Information",
+      "item": [
+        {
+          "name": "Organizations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/organizations",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "organizations"
+              ]
+            },
+            "description": "Retrieves a list of the Organizations accessible by the loggedin user."
+          },
+          "response": []
+        },
+        {
+          "name": "Carriers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/carriers",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "carriers"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "GET documents for a shipment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://tmsgateway{{subdomainSuffix}}.engagedtechnologies.com/shipments/{{currentShipmentId}}/Documents",
+              "protocol": "https",
+              "host": [
+                "tmsgateway{{subdomainSuffix}}",
+                "engagedtechnologies",
+                "com"
+              ],
+              "path": [
+                "shipments",
+                "{{currentShipmentId}}",
+                "Documents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get a Shipment Document",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{currentDocumentLink}}",
+              "host": [
+                "{{currentDocumentLink}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{currentToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "subdomainSuffix",
+      "value": "-staging"
+    },
+    {
+      "key": "loginEmail",
+      "value": "[Enter Email Here] -->>"
+    },
+    {
+      "key": "loginPassword",
+      "value": "[Enter Password Here] -->>"
+    },
+    {
+      "key": "redirectUri",
+      "value": "http://localhost:5000/auth"
+    },
+    {
+      "key": "scope",
+      "value": "gatewayTrackings gatewayRates gatewayShipments"
+    },
+    {
+      "key": "clientId",
+      "value": "[Enter Client Id Here] -- >>"
+    },
+    {
+      "key": "currentToken",
+      "value": "Populated by GetToken.tests and used for Authentication on all calls via Bearer Token Header"
+    },
+    {
+      "key": "state",
+      "value": "Populated by  Authorize.pre- request Script and used in the Authorize request body"
+    },
+    {
+      "key": "codeVerifier",
+      "value": "Populated by  Authorize.pre- request Script  and used in the Get Token request body"
+    },
+    {
+      "key": "codeChallenge",
+      "value": "Populated by  Authorize.pre- request Script  and used in the  Authorize request body"
+    },
+    {
+      "key": "code",
+      "value": "Populated  by  Authorize.tests and used in the Get Token request body"
+    },
+    {
+      "key": "currentShipmentId",
+      "value": "Populated by PostShipment.tests and used for Other Shipment calls"
+    },
+    {
+      "key": "currentRateId",
+      "value": "Populated by Quote a Shipment.tests and used for Shipment Booking"
+    },
+    {
+      "key": "current_orderId",
+      "value": ""
+    },
+    {
+      "key": "current_orderItemId",
+      "value": ""
+    },
+    {
+      "key": "current_fulfillmentId",
+      "value": ""
+    },
+    {
+      "key": "current_BOL_link",
+      "value": ""
+    },
+    {
+      "key": "OrganizationId",
+      "value": "[Enter Org Id Here] -- >> "
+    },
+    {
+      "key": "AccountNumber",
+      "value": "[Enter Account Number Here] -- >>"
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "currentReferenceNumberID",
+      "value": "Populated by Add ReferenceNumber.tests and used for Delete ReferenceNumber"
+    },
+    {
+      "key": "currentDocumentLink",
+      "value": "Populated by PostShipment.tests and GetDocuments.test and used for Get a shipment document call"
+    }
+  ]
+}
