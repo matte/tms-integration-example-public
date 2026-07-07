@@ -543,10 +543,10 @@
                       "\r",
                       "let dateSet = new Date();\r",
                       "dateSet.setDate(dateSet.getDate() + 1);\r",
-                      "\r",
-                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
+                      "const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;\r",
+                      "pm.collectionVariables.set(\"tomorrow\", fmt(dateSet));\r",
                       "dateSet.setDate(dateSet.getDate() + 2);\r",
-                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
+                      "pm.collectionVariables.set(\"deliveryDate\", fmt(dateSet));\r"
                       ""
                     ],
                     "type": "text/javascript",
@@ -605,10 +605,10 @@
                       "\r",
                       "let dateSet = new Date();\r",
                       "dateSet.setDate(dateSet.getDate() + 1);\r",
-                      "\r",
-                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
+                      "const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;\r",
+                      "pm.collectionVariables.set(\"tomorrow\", fmt(dateSet));\r",
                       "dateSet.setDate(dateSet.getDate() + 2);\r",
-                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
+                      "pm.collectionVariables.set(\"deliveryDate\", fmt(dateSet));\r"
                       ""
                     ],
                     "type": "text/javascript",
@@ -667,10 +667,10 @@
                       "\r",
                       "let dateSet = new Date();\r",
                       "dateSet.setDate(dateSet.getDate() + 1);\r",
-                      "\r",
-                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
+                      "const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;\r",
+                      "pm.collectionVariables.set(\"tomorrow\", fmt(dateSet));\r",
                       "dateSet.setDate(dateSet.getDate() + 2);\r",
-                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
+                      "pm.collectionVariables.set(\"deliveryDate\", fmt(dateSet));\r"
                       ""
                     ],
                     "type": "text/javascript",
