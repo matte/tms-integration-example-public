@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "568902c7-b793-431a-ae22-e484129816fd",
+    "_postman_id": "d0fac130-4cb1-4255-8b33-77255f1192ee",
     "name": "TMS Gateway Examples",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "32807236"
@@ -707,7 +707,7 @@
               "response": []
             }
           ],
-          "description": "Demonstrates the creation of a multi-stop shipment. Multi-stop is only allowed for FTL shipments, and quoting is not supported via the API. Multi-stop shipments can only be loaded via the API as building status shipments."
+          "description": "Demonstrates the creation of a multi-stop shipment. Multi-stop is only allowed for FTL shipments, and quoting is not supported via the API. Multi-stop shipments can only be loaded via the API as building or requested status shipments."
         },
         {
           "name": "Shipment Utilities",
