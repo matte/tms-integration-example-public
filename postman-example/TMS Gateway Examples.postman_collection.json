@@ -541,12 +541,12 @@
                   "script": {
                     "exec": [
                       "\r",
-                      "let dateset = new Date();\r",
-                      "dateset.setDate(dateset.getDate() + 1);\r",
+                      "let dateSet = new Date();\r",
+                      "dateSet.setDate(dateSet.getDate() + 1);\r",
                       "\r",
-                      "pm.environment.set(\"tomorrow\", dateset.toISOString().split('T')[0]);\r",
-                      "dateset.setDate(dateset.getDate() + 2);\r",
-                      "pm.environment.set(\"deliveryDate\", dateset.toISOString().split('T')[0]);\r",
+                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
+                      "dateSet.setDate(dateSet.getDate() + 2);\r",
+                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
                       ""
                     ],
                     "type": "text/javascript",
@@ -583,7 +583,7 @@
               "response": []
             },
             {
-              "name": "POST Multi-Stop Shipment - BUILDING no units to be finished in UI",
+              "name": "POST Multi-Stop Shipment - BUILDING no units to be finished in the UI",
               "event": [
                 {
                   "listen": "test",
@@ -603,12 +603,12 @@
                   "script": {
                     "exec": [
                       "\r",
-                      "let dateset = new Date();\r",
-                      "dateset.setDate(dateset.getDate() + 1);\r",
+                      "let dateSet = new Date();\r",
+                      "dateSet.setDate(dateSet.getDate() + 1);\r",
                       "\r",
-                      "pm.environment.set(\"tomorrow\", dateset.toISOString().split('T')[0]);\r",
-                      "dateset.setDate(dateset.getDate() + 2);\r",
-                      "pm.environment.set(\"deliveryDate\", dateset.toISOString().split('T')[0]);\r",
+                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
+                      "dateSet.setDate(dateSet.getDate() + 2);\r",
+                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
                       ""
                     ],
                     "type": "text/javascript",
@@ -645,7 +645,7 @@
               "response": []
             },
             {
-              "name": "POST Multi-Stop Shipment - Complete\\REQUESTED",
+              "name": "POST Multi-Stop Shipment - Complete/REQUESTED",
               "event": [
                 {
                   "listen": "test",
@@ -665,12 +665,12 @@
                   "script": {
                     "exec": [
                       "\r",
-                      "let dateset = new Date();\r",
-                      "dateset.setDate(dateset.getDate() + 1);\r",
+                      "let dateSet = new Date();\r",
+                      "dateSet.setDate(dateSet.getDate() + 1);\r",
                       "\r",
-                      "pm.environment.set(\"tomorrow\", dateset.toISOString().split('T')[0]);\r",
-                      "dateset.setDate(dateset.getDate() + 2);\r",
-                      "pm.environment.set(\"deliveryDate\", dateset.toISOString().split('T')[0]);\r",
+                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
+                      "dateSet.setDate(dateSet.getDate() + 2);\r",
+                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
                       ""
                     ],
                     "type": "text/javascript",
