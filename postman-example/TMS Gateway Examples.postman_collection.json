@@ -540,14 +540,20 @@
                   "listen": "prerequest",
                   "script": {
                     "exec": [
-                      "\r",
                       "let dateSet = new Date();\r",
+                      "\r",
+                      "const fmt = (d) =>\r",
+                      "  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;\r",
+                      "\r",
+                      "// Tomorrow\r",
                       "dateSet.setDate(dateSet.getDate() + 1);\r",
-                      "const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;\r",
                       "pm.collectionVariables.set(\"tomorrow\", fmt(dateSet));\r",
-                      "dateSet.setDate(dateSet.getDate() + 2);\r",
-                      "pm.collectionVariables.set(\"deliveryDate\", fmt(dateSet));\r"
-                      ""
+                      "pm.collectionVariables.set(\"deliveryDate\", fmt(dateSet));\r",
+                      "\r",
+                      "// Two days after tomorrow / 3 days from today\r",
+                      "let futureDate = new Date(dateSet);\r",
+                      "futureDate.setDate(futureDate.getDate() + 2);\r",
+                      "pm.collectionVariables.set(\"futureDeliveryDate\", fmt(futureDate));"
                     ],
                     "type": "text/javascript",
                     "packages": {},
@@ -605,10 +611,10 @@
                       "\r",
                       "let dateSet = new Date();\r",
                       "dateSet.setDate(dateSet.getDate() + 1);\r",
-                      "const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;\r",
-                      "pm.collectionVariables.set(\"tomorrow\", fmt(dateSet));\r",
+                      "\r",
+                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
                       "dateSet.setDate(dateSet.getDate() + 2);\r",
-                      "pm.collectionVariables.set(\"deliveryDate\", fmt(dateSet));\r"
+                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
                       ""
                     ],
                     "type": "text/javascript",
@@ -667,10 +673,10 @@
                       "\r",
                       "let dateSet = new Date();\r",
                       "dateSet.setDate(dateSet.getDate() + 1);\r",
-                      "const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;\r",
-                      "pm.collectionVariables.set(\"tomorrow\", fmt(dateSet));\r",
+                      "\r",
+                      "pm.collectionVariables.set(\"tomorrow\", dateSet.toISOString().split('T')[0]);\r",
                       "dateSet.setDate(dateSet.getDate() + 2);\r",
-                      "pm.collectionVariables.set(\"deliveryDate\", fmt(dateSet));\r"
+                      "pm.collectionVariables.set(\"deliveryDate\", dateSet.toISOString().split('T')[0]);\r",
                       ""
                     ],
                     "type": "text/javascript",
@@ -1451,6 +1457,14 @@
     {
       "key": "currentDocumentLink",
       "value": "Populated by PostShipment.tests and GetDocuments.test and used for Get a shipment document call"
+    },
+    {
+      "key": "tomorrow",
+      "value": ""
+    },
+    {
+      "key": "deliveryDate",
+      "value": ""
     }
   ]
 }
