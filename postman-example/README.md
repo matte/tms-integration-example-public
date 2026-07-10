@@ -69,13 +69,16 @@ Demonstrates sending a multi-stop shipment
 
 | # | Request | Description |
 |---|---|---|
-| 1 | **POST Multi-Stop Shipment - Incomplete/Proposed** | Creates a shipment in `BUILDING` with multiple stops.  |
+| 1 | **POST Multi-Stop Shipment - BUILDING Complete Data** | Creates a shipment in `BUILDING` with multiple stops and all data filled in.  |
+| 2 | **POST Multi-Stop Shipment - BUILDING no units to be finished in the UI** | Creates a shipment in `BUILDING` with multiple stops but no unit data. This is to demonstrate a shipment that will be finished vis the UI.  |
+| 3 | **POST Multi-Stop Shipment - Complete/REQUESTED** | Creates a shipment in `REQUESTED` with multiple stops and all data filled in. When the Requested status is sent, the shipment is send to eShipping's team for booking. |
 
 Notes on Multi-stop:
 * FTL mode only
-* Building status only
+* Building or Requested status only
 * does not use origin and destination, uses a stops array
 * Quoting and booking are not supported via API
+* Requested status indicates that the eShipping team should book the shipment
 
 
 ### Shipment > Shipment Utilities
