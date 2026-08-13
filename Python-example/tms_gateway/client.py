@@ -35,8 +35,8 @@ class TmsGatewayClient:
     Example:
         >>> client = TmsGatewayClient.for_environment("staging")
         >>> shipment = client.create_shipment({"accountNumber": "..."})
-        >>> quote = client.quote_shipment(shipment["shipmentId"])
-        >>> client.book_shipment(shipment["shipmentId"], {"selectedRateId": quote["rates"][0]["id"]})
+        >>> quote = client.quote_shipment(shipment["id"])
+        >>> client.book_shipment(shipment["id"], {"selectedRateId": quote["rates"][0]["id"]})
     """
 
     def __init__(
@@ -163,7 +163,7 @@ class TmsGatewayClient:
     ) -> JsonDict:
         """GET /shipments/search - reference number search; ``query`` is required."""
         if not query:
-            raise ValidationError("GET /shipments/search needs a reference number to search for.")
+            raise ValueError("GET /shipments/search needs a reference number to search for.")
         params = {"q": query, "shipmentStatus": shipment_status, "page": page, "pageSize": page_size}
         return self._request("GET", "/shipments/search", params=_drop_none(params))
 
@@ -239,7 +239,11 @@ class TmsGatewayClient:
             raise ValueError("Provide at least one pro number, bill number or shipment id.")
         result = self._request("GET", "/trackings", params=params)
         if isinstance(result, dict):
-            return list(result.get("items") or result.get("shipments") or [result])
+            if "items" in result:
+                return list(result.get("items") or [])
+            if "shipments" in result:
+                return list(result.get("shipments") or [])
+            return [result]
         return list(result or [])
 
     def get_shipment_tracking(self, shipment_id: str) -> JsonDict:

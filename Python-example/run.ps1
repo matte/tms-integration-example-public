@@ -19,8 +19,12 @@ $python = Join-Path $root ".venv\Scripts\python.exe"
 
 if (-not (Test-Path $python)) {
     Write-Host "Creating the virtual environment in .venv ..." -ForegroundColor Cyan
-    & py -3 -m venv (Join-Path $root ".venv")
-    if ($LASTEXITCODE -ne 0) { & python -m venv (Join-Path $root ".venv") }
+    if (Get-Command py -ErrorAction SilentlyContinue) {
+        & py -3 -m venv (Join-Path $root ".venv")
+    }
+    if (-not (Test-Path $python)) {
+        & python -m venv (Join-Path $root ".venv")
+    }
 }
 
 Write-Host "Installing dependencies ..." -ForegroundColor Cyan

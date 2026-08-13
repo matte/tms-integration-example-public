@@ -81,7 +81,7 @@ TmsIntegrationExample.sln
 
    ```bash
    git clone https://github.com/eShippingTechnologies/tms-integration-example.git
-   cd tms-integration-example
+   cd "tms-integration-example/C#-example"
    ```
 
 2. **Restore dependencies**
@@ -176,4 +176,4 @@ Tests are located in `test/TmsIntegrationExample.UnitTest` and cover the transfo
 
 ## Postman Collection
 
-A Postman collection is included in the `postman-example/` directory with sample requests for interacting with the TMS Gateway API directly. Import `TMS Gateway Examples.postman_collection.json` into Postman to explore the available endpoints.
+A Postman collection is included in the `../postman-example/` directory with sample requests for interacting with the TMS Gateway API directly. Import `TMS Gateway Examples.postman_collection.json` into Postman to explore the available endpoints.

@@ -66,7 +66,7 @@ The Python example can also be used as a command-line tool for experimenting wit
 
 ### Postman
 
-[`Postman-example`](./Postman-example/README.md)
+[`postman-example`](./postman-example/README.md)
 
 A Postman collection containing ready-to-run examples of TMS Gateway API requests.
 

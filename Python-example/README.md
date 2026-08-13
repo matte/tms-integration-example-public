@@ -179,6 +179,7 @@ reference number types, ...) are in `tms_gateway.enums`.
 ## Tests
 
 ```bash
+python -m pip install pytest
 python -m pytest
 ```
 

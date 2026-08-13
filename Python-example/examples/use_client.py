@@ -25,9 +25,13 @@ def main() -> None:
     client.add_reference_number(shipment_id, "SO_NUMBER", "SO-559812")
 
     quote = client.quote_shipment(shipment_id)
-    print(pretty(quote["rates"]))
+    rates = quote.get("rates") or []
+    print(pretty(rates))
+    if not rates:
+        print("No rates were returned; shipment was not booked.")
+        return
 
-    cheapest = min(quote["rates"], key=lambda rate: rate["totalCharge"])
+    cheapest = min(rates, key=lambda rate: rate["totalCharge"])
     booked = client.book_shipment(shipment_id, {"selectedRateId": cheapest["id"], "dispatch": False})
     print(f"Booked with {booked.get('carrierName')} | BOL {booked.get('billNumber')}")
 

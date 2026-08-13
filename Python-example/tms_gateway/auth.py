@@ -92,7 +92,10 @@ class BasePkceAuthenticator:
         """Return a valid access token, re-authenticating when it has expired."""
         with self._lock:
             if self._token is None or self._token.is_expired():
-                self._token = self._authorize()
+                try:
+                    self._token = self._authorize()
+                except requests.RequestException as exc:
+                    raise AuthenticationError(f"Authentication request failed: {exc}") from exc
             return self._token.access_token
 
     def invalidate(self) -> None:
@@ -368,7 +371,7 @@ class _CallbackHandler(http.server.BaseHTTPRequestHandler):
         message = (
             "Authentication complete. You can close this tab and return to the terminal."
             if succeeded
-            else f"Authentication failed: {query.get('error', 'no authorization code returned')}"
+            else "Authentication failed. Return to the terminal for details."
         )
         body = (
             "<html><head><title>TMS Gateway</title></head>"
