@@ -134,7 +134,7 @@ class TmsGatewayClient:
         ``pro_number`` or ``organization_id``.
         """
         if not any([name, bill_number, pro_number, organization_id]):
-            raise ValidationError(
+            raise ValueError(
                 "GET /shipments needs at least one of name, bill number, pro number or organization id."
             )
 
