@@ -181,11 +181,15 @@ class BasePkceAuthenticator:
                 f"Token endpoint returned HTTP {response.status_code}: {response.text.strip()}"
             )
 
-        payload = response.json()
+        try:
+            payload = response.json()
+        except ValueError as exc:
+            raise AuthenticationError(
+                f"Token endpoint returned invalid JSON: {response.text.strip()}"
+            ) from exc
         access_token = payload.get("access_token")
         if not access_token:
             raise AuthenticationError(f"Token endpoint response contained no access token: {payload}")
-
         return Token(
             access_token=access_token,
             token_type=payload.get("token_type", "Bearer"),
