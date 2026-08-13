@@ -1,0 +1,27 @@
+name: Publish Master to Public Repo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    # Prevent this workflow from doing anything if the file
+    # also exists in the public mirror.
+    if: github.repository == 'eShippingTechnologies/tms-integration-example'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push master to public repository
+        env:
+          PUBLIC_MIRROR_TOKEN: ${{ secrets.PUBLIC_MIRROR_TOKEN }}
+        run: |
+          git remote add public https://x-access-token:${PUBLIC_MIRROR_TOKEN}@github.com/eShippingTechnologies/tms-integration-example-public.git
+          git push public HEAD:master --force
