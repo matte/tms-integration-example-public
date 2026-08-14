@@ -1,0 +1,56 @@
+{
+  "accountNumber": "REPLACE_WITH_ACCOUNT_NUMBER",
+  "mode": "LTL",
+  "equipmentType": "LTL_DRY_VAN",
+  "serviceLevel": "STANDARD",
+  "shipmentStatus": "BUILDING",
+  "isComplete": true,
+  "requestedPickupDate": "2026-08-10",
+  "stops": [
+    {
+      "sequenceNumber": 1,
+      "name": "Engaged Technologies Warehouse",
+      "address1": "1600 Genessee St",
+      "city": "Kansas City",
+      "stateCode": "MO",
+      "postalCode": "64102",
+      "countryCode": "US",
+      "locationDirectionType": "MY_LOCATION",
+      "contactName": "Dock Supervisor",
+      "contactPhone": "8165551212"
+    },
+    {
+      "sequenceNumber": 2,
+      "name": "Acme Distribution",
+      "address1": "500 W Madison St",
+      "city": "Chicago",
+      "stateCode": "IL",
+      "postalCode": "60661",
+      "countryCode": "US",
+      "locationDirectionType": "THIRD_PARTY",
+      "contactName": "Receiving",
+      "contactPhone": "3125551212",
+      "accessorials": [
+        { "accessorialCode": "LIFTGATE", "accessorialType": "DESTINATION" }
+      ]
+    }
+  ],
+  "units": [
+    {
+      "description": "Palletized valves",
+      "quantity": 2,
+      "packageType": "PALLETS",
+      "weight": 850,
+      "weightUnitOfMeasure": "LB",
+      "freightClass": "FREIGHT_CLASS_100",
+      "length": 48,
+      "width": 40,
+      "height": 45,
+      "dimensionsUnitOfMeasure": "IN",
+      "isStackable": false
+    }
+  ],
+  "referenceNumbers": [
+    { "type": "PO_NUMBER", "value": "PO-100234" }
+  ]
+}

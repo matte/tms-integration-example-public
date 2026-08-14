@@ -1,0 +1,7 @@
+{
+  "originPostalCode": "64102",
+  "destinationPostalCode": "60661",
+  "totalWeight": 850,
+  "freightClass": "FREIGHT_CLASS_100",
+  "destinationAccessorials": ["LIFTGATE"]
+}

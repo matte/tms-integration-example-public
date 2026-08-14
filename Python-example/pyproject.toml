@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tms-gateway-client"
+version = "0.1.0"
+description = "Python client and interactive console for the Engaged Technologies TMS Gateway API"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.31.0",
+    "rich>=13.7.0",
+]
+
+[project.scripts]
+tms-cli = "tms_cli.app:main"
+
+[tool.setuptools]
+packages = ["tms_gateway", "tms_cli"]

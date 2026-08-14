@@ -1,179 +1,264 @@
-# TMS Integration Example
+# eShipping TMS Integration Examples
 
-A reference .NET 6 application that demonstrates how to integrate with the Engaged Technologies TMS Gateway API. It reads mock order and address data from local JSON files, transforms them into TMS Gateway shipment resources, authenticates via OpenID Connect (PKCE), and posts shipments to the gateway.
+This repository contains reference implementations and examples for integrating with the **eShipping TMS Gateway API**.
 
-## Table of Contents
+The examples are intended to help developers understand authentication, shipment creation and management, quoting, booking, tracking, reference numbers, documents, and other common TMS integration workflows.
 
-- [Prerequisites](#prerequisites)
-- [Solution Structure](#solution-structure)
-- [Getting Started](#getting-started)
-- [Configuration](#configuration)
-- [How It Works](#how-it-works)
-- [Running Tests](#running-tests)
-- [Postman Collection](#postman-collection)
+> **Note:** This repository is provided as a public, read-only mirror of the approved integration examples maintained by eShipping. Changes made directly to this repository may be overwritten during synchronization.
 
-## Prerequisites
+## Available Examples
 
-- [.NET 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0) or later
-- A TMS Gateway account (account number, email, and password)
-- Visual Studio 2022+ or the `dotnet` CLI
+### C# / .NET
 
-## Solution Structure
+[`C#-example`](./C%23-example/README.md)
 
-```
-TmsIntegrationExample.sln
-├── src/
-│   ├── TmsIntegrationExample.Example        # Hosted background job that runs the integration
-│   │   ├── Program.cs                       # Application entry point
-│   │   ├── Startup.cs                       # DI and service configuration
-│   │   ├── TmsIntegrationExampleJob.cs      # BackgroundService that triggers processing
-│   │   ├── TmsIntegrationExampleProcessor.cs # Reads mock data, transforms, and posts shipments
-│   │   ├── Transformers/
-│   │   │   ├── MockOrderToShipment.cs       # Order → ShipmentPost transformer
-│   │   │   └── MockAddressToGatewayStop.cs  # Address → Stop transformer
-│   │   └── Extensions/
-│   │       ├── FormatExtensions.cs          # Phone and country code formatting helpers
-│   │       └── PathExtensions.cs            # Assembly-relative path resolution
-│   │
-│   └── TmsIntegrationExample.Services       # Shared service clients and models
-│       ├── TmsGatewayApi/
-│       │   ├── ITmsGatewayClient.cs         # Gateway client interface
-│       │   ├── TmsGatewayClient.cs          # HTTP client that posts shipments to the gateway
-│       │   ├── Configuration/
-│       │   │   └── TmsGatewayConfiguration.cs
-│       │   └── Model/                       # Gateway resource models (Shipment, Stop, Unit, etc.)
-│       ├── AccessToken/
-│       │   ├── IAccessTokenClient.cs        # Access token client interface
-│       │   ├── AccessTokenClient.cs         # OIDC authorization-code + PKCE token acquisition
-│       │   └── Configuration/
-│       │       └── AccessTokenConfiguration.cs
-│       ├── MockApi/
-│       │   ├── IMockClient.cs               # Mock data client interface
-│       │   ├── MockClient.cs                # Reads orders/addresses from local JSON files
-│       │   ├── Orders.json                  # Sample order data
-│       │   ├── ShipTo.json                  # Sample ship-to address
-│       │   ├── SourceLocation.json          # Sample source/origin address
-│       │   └── Model/
-│       │       ├── Order.cs
-│       │       └── Address.cs
-│       └── Extensions/
-│           ├── ServiceCollectionExtensions.cs# DI registration for clients and serializer options
-│           └── Helpers.cs                   # Random string and PKCE code-challenge utilities
-│
-└── test/
-    └── TmsIntegrationExample.UnitTest       # xUnit tests for transformers
-        └── Mock/Models/Transformers/
-            ├── MockOrderToShipmentTests.cs
-            └── MockAddressToGatewayStopTests.cs
-```
+A .NET reference application demonstrating a complete TMS Gateway integration, including:
 
-### Key Projects
+* OAuth/OpenID Connect authentication using PKCE
 
-| Project | Description |
-|---|---|
-| **TmsIntegrationExample.Example** | ASP.NET Core hosted service that runs a one-shot background job to process mock orders and post them as shipments to the TMS Gateway. |
-| **TmsIntegrationExample.Services** | Class library containing the TMS Gateway HTTP client, the OIDC access-token client, mock data readers, and all shared models. |
-| **TmsIntegrationExample.UnitTest** | xUnit test project with FluentAssertions and Moq for verifying transformer logic. |
+* Reading and transforming source order data
+
+* Creating shipments
+
+* Shipment, stop, unit, and reference-number models
+
+* TMS Gateway API client implementation
+
+* Dependency injection and configuration
+
+* Unit tests
+
+This example is a good starting point for developers building a production integration using **C# and .NET**.
+
+---
+
+### Python
+
+[`Python-example`](./Python-example/README.md)
+
+A Python client library and interactive console application for working with the TMS Gateway API.
+
+Examples include:
+
+* Authentication using OAuth2 authorization code + PKCE
+
+* Creating and updating shipments
+
+* Retrieving shipments
+
+* Quick quotes
+
+* Shipment quotes
+
+* Booking shipments
+
+* Tracking
+
+* Reference-number management
+
+* Carrier and organization lookups
+
+* Shipment documents
+
+The Python example can also be used as a command-line tool for experimenting with the API before incorporating the client into another application.
+
+---
+
+### Postman
+
+[`postman-example`](./postman-example/README.md)
+
+A Postman collection containing ready-to-run examples of TMS Gateway API requests.
+
+The collection includes examples for:
+
+* Authentication
+
+* Shipment creation
+
+* Shipment updates
+
+* Shipment retrieval
+
+* Shipment cancellation
+
+* Multi-stop shipments
+
+* Shipment searches
+
+* Reference numbers
+
+* Quick quotes
+
+* Booking
+
+* Tracking
+
+* Carrier information
+
+* Organization information
+
+* Shipment documents
+
+The Postman collection is often the easiest place to start when learning the API or troubleshooting an integration.
 
 ## Getting Started
 
-1. **Clone the repository**
+Choose the example that best matches how you want to work with the TMS Gateway:
 
-   ```bash
-   git clone https://github.com/eShippingTechnologies/tms-integration-example.git
-   cd tms-integration-example
-   ```
+| If you want to...                      | Start here                                     |
 
-2. **Restore dependencies**
+| -------------------------------------- | ---------------------------------------------- |
 
-   ```bash
-   dotnet restore
-   ```
+| Explore API calls without writing code | [Postman Example](./Postman-example/README.md) |
 
-3. **Configure credentials** (see [Configuration](#configuration) below)
+| Build a .NET integration               | [C# Example](./C%23-example/README.md)         |
 
-4. **Build**
+| Build a Python integration             | [Python Example](./Python-example/README.md)   |
 
-   ```bash
-   dotnet build
-   ```
+Each example directory contains its own README with prerequisites, configuration, authentication, and usage instructions.
 
-5. **Run**
+## Interactive API Documentation
 
-   ```bash
-   dotnet run --project src/TmsIntegrationExample.Example
-   ```
+The eShipping TMS Gateway includes an interactive **Swagger / OpenAPI** page for developers working with the API.
 
-   The application starts as a hosted service, processes the mock orders once, and then exits.
+### Staging Swagger
 
-## Configuration
+**[Open the TMS Gateway Staging Swagger Page](https://tmsgateway-staging.engagedtechnologies.com/swagger/index.html)**
 
-Application settings are in `src/TmsIntegrationExample.Example/appsettings.json`. Sensitive values should be provided via [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) or environment variables — do not commit credentials to the repository.
+The Swagger interface can be used to:
 
-### Setting Up User Secrets
+* Browse available API endpoints
 
-```bash
-cd src/TmsIntegrationExample.Example
-dotnet user-secrets set "Endpoints:TmsGatewayAPI:AccountNumber" "<your-account-number>"
-dotnet user-secrets set "Endpoints:AccessTokenAPI:Email" "<your-email>"
-dotnet user-secrets set "Endpoints:AccessTokenAPI:Password" "<your-password>"
-dotnet user-secrets set "Endpoints:AccessTokenAPI:Scope" "<your-scope>"
-```
+* Review HTTP methods and routes
 
-### Configuration Reference
+* View request parameters
 
-| Setting | Description |
-|---|---|
-| `Endpoints:TmsGatewayAPI:BaseAddress` | Base URL of the TMS Gateway (default: staging). |
-| `Endpoints:TmsGatewayAPI:ShipmentsSubPath` | API path for shipment operations (default: `shipments`). |
-| `Endpoints:TmsGatewayAPI:AccountNumber` | Your TMS account number. |
-| `Endpoints:AccessTokenAPI:BaseAddress` | Base URL of the identity provider / login endpoint. |
-| `Endpoints:AccessTokenAPI:ClientId` | OAuth client identifier (default: `ui`). |
-| `Endpoints:AccessTokenAPI:LoginSubPath` | Path used to authenticate the user session. |
-| `Endpoints:AccessTokenAPI:Email` | Login email address. |
-| `Endpoints:AccessTokenAPI:Password` | Login password. |
-| `Endpoints:AccessTokenAPI:RedirectUri` | OAuth redirect URI. |
-| `Endpoints:AccessTokenAPI:Scope` | Requested OAuth scope. |
+* Inspect request and response models
 
-## How It Works
+* Review available data fields and schemas
 
-1. **Startup** — `Program.cs` builds a generic host with `Startup` which registers the background job, the TMS Gateway client, the access-token client, and the mock data reader.
+* See expected response structures and status codes
 
-2. **Job Execution** — `TmsIntegrationExampleJob` (a `BackgroundService`) creates a DI scope and calls `TmsIntegrationExampleProcessor.ProcessAsync()`.
+* Test API requests directly from the browser where supported and properly authenticated
 
-3. **Data Loading** — The processor reads mock order data from `Orders.json` and address data from `SourceLocation.json` / `ShipTo.json` via the `MockClient`. In a real integration these would be replaced by calls to your ERP or order management system.
+The Swagger documentation is particularly useful when developing or troubleshooting an integration because it provides a direct view of the API contract alongside the C#, Python, and Postman examples in this repository.
 
-4. **Transformation** — Each order is transformed into a `ShipmentPost` using:
-   - `MockOrderToShipment` — maps order fields (order number, PO number, requested date) and sets reference numbers (`SO_NUMBER`, `PO_NUMBER`, `SHIPMENT_ID`).
-   - `MockAddressToGatewayStop` — maps physical/mailing address fields to a gateway `Stop`, normalizing phone numbers and country codes.
+### Recommended Development Workflow
 
-5. **Authentication** — `AccessTokenClient` performs an OpenID Connect authorization-code flow with PKCE against the identity provider to obtain a bearer token.
+For developers new to the TMS Gateway, we recommend:
 
-6. **Shipment Posting** — `TmsGatewayClient` attaches the bearer token and POSTs the serialized `ShipmentPost` to the TMS Gateway's shipments endpoint. The gateway returns a full `Shipment` resource with a `ShipmentId`.
+1. Review the available endpoints in [Swagger](https://tmsgateway-staging.engagedtechnologies.com/swagger/index.html).
 
-### Key Models
+2. Use the [Postman Example](./Postman-example/README.md) to experiment with authentication and API requests.
 
-| Model | Purpose |
-|---|---|
-| `ShipmentPost` | Request body for creating a shipment (status, origin/destination stops, units, reference numbers, billing, etc.). |
-| `Shipment` | Full shipment resource returned by the gateway, including the assigned `ShipmentId`. |
-| `Stop` | Origin or destination location with address, contact, and scheduling details. |
-| `Unit` | Individual handling unit (freight class, weight, dimensions, hazmat properties). |
-| `ReferenceNumber` | Key-value pair for customer-specific identifiers (SO number, PO number, etc.). |
-| `BookingOptions` | Carrier selection, service level, and dispatch preferences for booking. |
-| `BillingDetailPost` | Billing party and address information for the shipment. |
+3. Review the [C# Example](./C%23-example/README.md) or [Python Example](./Python-example/README.md) when implementing the integration in application code.
 
-## Running Tests
+4. Develop and test against the **Staging** environment before moving an integration to Production.
 
-```bash
-dotnet test
-```
+**Note:** The Swagger URL above is for the eShipping TMS Gateway **Staging** environment. Credentials and appropriate access may be required for some operations.
 
-Tests are located in `test/TmsIntegrationExample.UnitTest` and cover the transformer logic:
+## TMS Gateway Environments
 
-- **MockOrderToShipmentTests** — verifies that orders are correctly mapped to `ShipmentPost` resources, including reference number assembly.
-- **MockAddressToGatewayStopTests** — verifies that addresses are correctly mapped to `Stop` resources, including phone formatting and country code normalization.
+Examples in this repository may support one or more of the following eShipping TMS Gateway environments:
 
-## Postman Collection
+| Environment | Gateway                                              |
 
-A Postman collection is included in the `postman-example/` directory with sample requests for interacting with the TMS Gateway API directly. Import `TMS Gateway Examples.postman_collection.json` into Postman to explore the available endpoints.
+| ----------- | ---------------------------------------------------- |
+
+| Staging     | `https://tmsgateway-staging.engagedtechnologies.com` |
+
+| QA          | `https://tmsgateway-qa.engagedtechnologies.com`      |
+
+| Production  | `https://tmsgateway.engagedtechnologies.com`         |
+
+Not every example is configured for every environment. See the README within each example for its supported environment options.
+
+## Authentication
+
+The examples demonstrate OAuth 2.0 / OpenID Connect authentication using **PKCE (Proof Key for Code Exchange)**.
+
+Authentication configuration varies by implementation. Depending on your integration, you may need information supplied by eShipping such as:
+
+* TMS account number
+
+* User or service credentials
+
+* OAuth client ID
+
+* Authorized scopes
+
+* Environment-specific endpoints
+
+See the individual example README for configuration instructions.
+
+## Security
+
+**Do not commit credentials, access tokens, passwords, client secrets, or other sensitive information to your repository.**
+
+Use an appropriate secrets-management mechanism for your development and production environments, such as:
+
+* Environment variables
+
+* .NET User Secrets for local development
+
+* CI/CD secrets
+
+* Azure Key Vault or another production secrets store
+
+The credentials and sample values contained in these examples should not be treated as production credentials.
+
+## Important Notes
+
+These projects are **reference implementations** intended to demonstrate common integration patterns.
+
+They may need to be adapted for your application's:
+
+* Business rules
+
+* Error handling and retry requirements
+
+* Logging and monitoring
+
+* Data transformation
+
+* Authentication model
+
+* Credential management
+
+* Environment configuration
+
+* Production deployment architecture
+
+Developers should review and test integration behavior against the appropriate eShipping environment before deploying changes to production.
+
+## Repository Updates
+
+This public repository is automatically synchronized from the approved `master` branch of eShipping's internal integration-example repository.
+
+As a result:
+
+* `master` represents the currently published examples.
+
+* Internal development and feature branches are not published here.
+
+* Direct changes to this public mirror may be overwritten by a future synchronization.
+
+* Published examples may change as the TMS Gateway and recommended integration patterns evolve.
+
+## Documentation
+
+Detailed documentation for each implementation is located within its respective directory:
+
+* [C# / .NET Documentation](./C%23-example/README.md)
+
+* [Python Documentation](./Python-example/README.md)
+
+* [Postman Documentation](./Postman-example/README.md)
+
+## About eShipping
+
+eShipping provides transportation management technology and services that help organizations manage shipping, carrier connectivity, rating, booking, tracking, and related transportation workflows.
+
+This repository contains technical examples specifically intended to assist developers integrating their systems with the eShipping TMS Gateway.
+
