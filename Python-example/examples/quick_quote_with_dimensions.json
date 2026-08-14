@@ -1,0 +1,21 @@
+{
+  "originPostalCode": "64102",
+  "originCountryCode": "US",
+  "destinationPostalCode": "60661",
+  "destinationCountryCode": "US",
+  "equipmentType": "LTL_DRY_VAN",
+  "units": [
+    {
+      "quantity": 2,
+      "packageType": "PALLETS",
+      "totalWeight": 850,
+      "freightClass": "FREIGHT_CLASS_100",
+      "length": 48,
+      "width": 40,
+      "height": 45,
+      "description": "Palletized valves",
+      "isHazmat": false
+    }
+  ],
+  "destinationAccessorials": ["LIFTGATE"]
+}
