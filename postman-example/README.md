@@ -26,7 +26,15 @@ The remaining variables (`currentToken`, `state`, `codeVerifier`, `codeChallenge
 
 ## Authentication
 
-All API requests in the collection use a **Bearer Token** that is obtained through an OAuth 2.0 authorization-code flow with PKCE. You must run the three authentication requests **in order** before making any other calls:
+All API requests in the collection use a **Bearer Token** that is obtained through via PKCE or Client Credentials.
+
+## Client Credentials
+
+1. **Get Token** - `POST /connect/token`
+   Exchanged client Id and Client Secret for an access token.
+
+## PKCE 
+   An OAuth 2.0 authorization-code flow with PKCE. You must run the three authentication requests **in order** before making any other calls:
 
 1. **Login** — `POST /api/account/login`
    Authenticates your user session with email and password. The server sets session cookies that are required for the next step.

@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "d0fac130-4cb1-4255-8b33-77255f1192ee",
+    "_postman_id": "402992f4-a0e1-46ce-9e2b-95c335392a25",
     "name": "TMS Gateway Examples",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "32807236"
@@ -10,7 +10,75 @@
       "name": "Authentication",
       "item": [
         {
-          "name": "Standard PKCE",
+          "name": "Client Credentials",
+          "item": [
+            {
+              "name": "Get Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200));\nconst json = pm.response.json();\npm.test('Response contains access_token', () => pm.expect(json.access_token).to.be.a('string'));\npm.collectionVariables.set('currentToken', json.access_token);\npm.collectionVariables.set('tokenExpiresAt', Date.now() + (json.expires_in * 1000));\nconsole.log('Token stored; expires in ' + json.expires_in + 's; scopes: ' + json.scope);"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                  }
+                ],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "grant_type",
+                      "value": "client_credentials"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "{{clientId}}"
+                    },
+                    {
+                      "key": "client_secret",
+                      "value": "{{clientSecret}}"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "{{scope}}"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "https://login.tms{{subdomainSuffix}}.engagedtechnologies.com/connect/token",
+                  "protocol": "https",
+                  "host": [
+                    "login",
+                    "tms{{subdomainSuffix}}",
+                    "engagedtechnologies",
+                    "com"
+                  ],
+                  "path": [
+                    "connect",
+                    "token"
+                  ]
+                },
+                "description": "OAuth 2.0 client credentials grant against the Identity server.\n\nSet `clientId` and `clientSecret` in the collection Variables tab. The response `access_token` is stored in `currentToken` and `expires_in` is used to set `tokenExpiresAt`. Tokens last about an hour."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "PKCE",
           "item": [
             {
               "name": "Login",
@@ -279,7 +347,8 @@
           ],
           "description": "The three endpoints contained in this folder are required to authenticate and receive a bearer token to be used when making calls to the API.  \n  \nThis authentication process utilizes OAuth 2 with PKCE."
         }
-      ]
+      ],
+      "description": "The eShipping API provides two methods of Authentication:  \n  \nUser name and password via PKCE protocal or Client Credentials."
     },
     {
       "name": "Shipment",
@@ -1464,6 +1533,10 @@
     },
     {
       "key": "deliveryDate",
+      "value": ""
+    },
+    {
+      "key": "tokenExpiresAt",
       "value": ""
     }
   ]
