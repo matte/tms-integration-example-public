@@ -1452,7 +1452,7 @@
       "value": "[Enter Password Here] -->>"
     },
     {
-      "key": "client_secret",
+      "key": "clientSecret",
       "value": ""
     },
     {
