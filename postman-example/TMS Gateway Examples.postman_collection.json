@@ -1452,16 +1452,28 @@
       "value": "[Enter Password Here] -->>"
     },
     {
+      "key": "client_secret",
+      "value": ""
+    },
+    {
+      "key": "clientId",
+      "value": "[Enter Client Id Here] -- >>"
+    },
+    {
+      "key": "AccountNumber",
+      "value": "[Enter Account Number Here] -- >>"
+    },
+    {
+      "key": "OrganizationId",
+      "value": "[Enter Org Id Here] -- >> "
+    },
+    {
       "key": "redirectUri",
       "value": "http://localhost:5000/auth"
     },
     {
       "key": "scope",
       "value": "gatewayTrackings gatewayRates gatewayShipments"
-    },
-    {
-      "key": "clientId",
-      "value": "[Enter Client Id Here] -- >>"
     },
     {
       "key": "currentToken",
@@ -1506,14 +1518,6 @@
     {
       "key": "current_BOL_link",
       "value": ""
-    },
-    {
-      "key": "OrganizationId",
-      "value": "[Enter Org Id Here] -- >> "
-    },
-    {
-      "key": "AccountNumber",
-      "value": "[Enter Account Number Here] -- >>"
     },
     {
       "key": "refreshToken",
