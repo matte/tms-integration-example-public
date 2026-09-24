@@ -26,7 +26,7 @@ The remaining variables (`currentToken`, `state`, `codeVerifier`, `codeChallenge
 
 ## Authentication
 
-All API requests in the collection use a **Bearer Token** that is obtained through via PKCE or Client Credentials.
+All API requests in the collection use a **Bearer Token** obtained through either PKCE or Client Credentials.
 
 ## Client Credentials
 
