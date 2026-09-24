@@ -31,7 +31,7 @@ All API requests in the collection use a **Bearer Token** obtained through eithe
 ## Client Credentials
 
 1. **Get Token** - `POST /connect/token`
-   Exchanged client Id and Client Secret for an access token.
+   Exchanges the configured `clientId` and `clientSecret` for an access token. Set `clientSecret` in the collection Variables tab before sending the request.
 
 ## PKCE 
    An OAuth 2.0 authorization-code flow with PKCE. You must run the three authentication requests **in order** before making any other calls:
