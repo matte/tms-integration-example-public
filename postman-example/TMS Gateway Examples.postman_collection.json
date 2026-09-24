@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "402992f4-a0e1-46ce-9e2b-95c335392a25",
+    "_postman_id": "01923baf-43e6-478a-9177-1e3505a5e602",
     "name": "TMS Gateway Examples",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "32807236"
@@ -348,7 +348,7 @@
           "description": "The three endpoints contained in this folder are required to authenticate and receive a bearer token to be used when making calls to the API.  \n  \nThis authentication process utilizes OAuth 2 with PKCE."
         }
       ],
-      "description": "The eShipping API provides two methods of Authentication:  \n  \nUser name and password via PKCE protocal or Client Credentials."
+      "description": "The eShipping API provides two methods of Authentication:\n\nUser name and password via PKCE protocol or Client Credentials."
     },
     {
       "name": "Shipment",
