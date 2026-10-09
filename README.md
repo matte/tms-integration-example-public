@@ -104,17 +104,15 @@ The Postman collection is often the easiest place to start when learning the API
 
 ## Getting Started
 
-Choose the example that best matches how you want to work with the TMS Gateway:
+Choose an example which best matches your TMS Gateway use case:
+
 
 | If you want to...                      | Start here                                     |
-
 | -------------------------------------- | ---------------------------------------------- |
-
 | Explore API calls without writing code | [Postman Example](./Postman-example/README.md) |
-
 | Build a .NET integration               | [C# Example](./C%23-example/README.md)         |
-
 | Build a Python integration             | [Python Example](./Python-example/README.md)   |
+
 
 Each example directory contains its own README with prerequisites, configuration, authentication, and usage instructions.
 
